@@ -1332,7 +1332,7 @@ let timers=[];
 const later=(f,ms)=>timers.push(setTimeout(f,reduce?Math.min(ms,300):ms));
 const clear=()=>{timers.forEach(clearTimeout);timers=[];};
 function frame(n,html,footHtml=''){
-  clear();stepL.textContent=n?`${n} / ${STEPS.length} · ${STEPS[n-1]}`:'';
+  clear();stepL.textContent='';
   stage.innerHTML=html;foot.innerHTML=footHtml;
   stage.classList.remove('in');void stage.offsetWidth;stage.classList.add('in');
 }
