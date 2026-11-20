@@ -166,8 +166,15 @@ h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;tex
     linear-gradient(transparent 14px,currentColor 14px,currentColor 15px,transparent 15px,transparent calc(100% - 15px),currentColor calc(100% - 15px),currentColor calc(100% - 14px),transparent calc(100% - 14px)),
     var(--c);
   box-shadow:none;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
-.sp.bk .face::after{content:"";position:absolute;top:4px;bottom:4px;left:100%;width:var(--d);transform-origin:left center;transform:rotateY(90deg);
-  background:linear-gradient(90deg,rgba(0,0,0,.18),transparent 30%),repeating-linear-gradient(180deg,#f4f0e6 0 2px,#d8d1c0 2px 3px);border-radius:0 2px 2px 0}
+/* the front board: hinged at the spine, running back into the shelf; turning the book brings it round to face you */
+.sp.bk .bc{position:absolute;top:0;left:100%;width:var(--cw);height:100%;transform-origin:left center;transform:rotateY(90deg);backface-visibility:hidden;border-radius:0 3px 3px 0;overflow:hidden;pointer-events:none;background:var(--soft);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--rule) 30%,transparent)}
+.sp.bk .bc .cv{margin:0;width:100%;height:100%}
+.sp.bk .bc svg{width:100%;height:100%}
+/* the joint where board meets spine, plus a soft sheen across the board */
+.sp.bk .bc::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.38),rgba(0,0,0,.1) 5%,rgba(255,255,255,.08) 7%,transparent 16%,rgba(255,255,255,.1) 58%,transparent 78%,rgba(0,0,0,.14))}
+/* in shadow while it faces the shelf, lit as it turns toward you */
+.sp.bk .bc::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:#000;opacity:.55;transition:opacity .45s}
+.sp.bk:hover .bc::before,.sp.bk:focus-visible .bc::before,.sp.bk.up .bc::before{opacity:0}
 .sp.bk .t{font-family:Newsreader,Georgia,serif;font-optical-sizing:auto;font-weight:500;font-size:15px;letter-spacing:0}
 .sp.bk .a{font-family:Newsreader,Georgia,serif;font-style:italic;font-size:12px}
 .sp.bk:hover .face,.sp.bk:focus-visible .face,.sp.bk.up .face{transform:translateY(-18px) translateZ(26px) rotateY(-42deg);box-shadow:none}
@@ -578,7 +585,7 @@ body{transition:background-color .3s,color .3s}
 <main id="top">
   <section class="band hero">
     <div class="in">
-      <h1 class="w">What stayed with us in 2026</h1>
+      <h1 class="w">What we carried out of 2026</h1>
       <div class="lede">
         <div>
           <p class="ezgi">“The more AI &amp; tech I use, the more I find myself going to art &amp; human creativity to… reorient.”</p>
@@ -712,7 +719,7 @@ body{transition:background-color .3s,color .3s}
 </main>
 
 <footer class="band">
-  <p class="made"><span>Made by the people that make PUBLIC</span><span>2026</span></p>
+  <p class="made"><span>Made by the people that make PUBLIC</span></p>
   <svg class="bigmark wide" role="img" aria-label="PUBLIC Wrapped 2026"><rect fill="none" stroke="currentColor"/><text class="m-pub" font-family="Poppins,Arial,sans-serif" font-weight="600" fill="currentColor">PUBLIC</text><text class="m-wr" font-family="Schibsted Grotesk,Arial,sans-serif" fill="currentColor"><tspan font-weight="800">Wrapped</tspan><tspan font-weight="300"> 2026</tspan></text></svg>
   <svg class="bigmark tall" role="img" aria-label="PUBLIC Wrapped 2026"><rect fill="none" stroke="currentColor"/><text class="m-pub" font-family="Poppins,Arial,sans-serif" font-weight="600" fill="currentColor">PUBLIC</text><text class="m-wr" font-family="Schibsted Grotesk,Arial,sans-serif" fill="currentColor"><tspan font-weight="800">Wrapped</tspan><tspan font-weight="300"> 2026</tspan></text></svg>
 </footer>
@@ -991,8 +998,11 @@ function renderShop(rows){
     }else if(g.k==='other'){
       rack=g.items.map(o=>`<button type="button" class="fo${o.i===sel?' up':''}" data-up="${o.i}" aria-label="${lab(o)}">${cover(o.p)}</button>`).join('');
     }else{
-      rack=g.items.map(o=>{const L=spineLook(o.p,g.k);return `<button type="button" class="sp${g.k==='book'?' bk':''}${o.i===sel?' up':''}" data-up="${o.i}" aria-label="${lab(o)}" style="--w:${L.w}px;--h:${L.h}px;--d:${Math.round(L.h*.2)}px;--c:${L.c[0]};--t:${L.c[1]}${L.band?';--bd:var(--sig)':''}"><span class="face">${g.k==='film'?`<span class="n">${String(o.i+1).padStart(3,'0')}</span>`:''}<span class="t">${esc(o.p.title)}</span>${g.k==='book'&&o.p.by?`<span class="a">${esc(o.p.by)}</span>`:''}${g.k==='film'?'<span class="b">PUBLIC</span>':''}</span></button>`;}).join('')
-        +`<a class="sp ghost" href="#add" style="--gh:${g.k==='film'?256:220}px" aria-label="Add yours to this shelf"><span class="face"><span class="t">Yours here</span></span></a>`;
+      rack=g.items.map(o=>{const L=spineLook(o.p,g.k);return `<button type="button" class="sp${g.k==='book'?' bk':''}${o.i===sel?' up':''}" data-up="${o.i}" aria-label="${lab(o)}" style="--w:${L.w}px;--h:${L.h}px;--cw:${Math.round(L.h*2/3)}px;--c:${L.c[0]};--t:${L.c[1]}${L.band?';--bd:var(--sig)':''}"><span class="face">${g.k==='book'?`<span class="bc" aria-hidden="true">${cover(o.p).replace('class="cv"','class="cv drawn"')}</span>`:''}${g.k==='film'?`<span class="n">${String(o.i+1).padStart(3,'0')}</span>`:''}<span class="t">${esc(o.p.title)}</span>${g.k==='book'&&o.p.by?`<span class="a">${esc(o.p.by)}</span>`:''}${g.k==='film'?'<span class="b">PUBLIC</span>':''}</span></button>`;}).join('')
+;
+      // books swing their covers out to the right, so their empty slot sits at the start of the shelf where nothing covers it
+      const ghost=`<a class="sp ghost" href="#add" style="--gh:${g.k==='film'?256:220}px" aria-label="Add yours to this shelf"><span class="face"><span class="t">Yours here</span></span></a>`;
+      rack=g.k==='book'?ghost+rack:rack+ghost;
     }
     if(g.k!=='other')rack+=`<div class="display" aria-hidden="true">${shopArt(sel)}</div>`;
     const label=g.k==='other'?[...new Set(g.items.map(o=>o.p.medium))].map((m,j)=>{const t=plural[m]||m;return j?t:t[0].toUpperCase()+t.slice(1);}).join(', ').replace(/, ([^,]*)$/,' & $1'):g.label;
