@@ -6,7 +6,7 @@
 <title>PUBLIC Wrapped 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400..800&family=Newsreader:opsz,wght@6..72,400..500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Schibsted+Grotesk:wght@400..800&family=Newsreader:opsz,wght@6..72,400..500&display=swap" rel="stylesheet">
 <style>
 /* VOICE  occasion, hushed: a studio index, not a party
    IDEA   a record label's catalogue / an architecture practice's project index: every pick gets a catalogue number
@@ -31,6 +31,10 @@ button{font:inherit;color:inherit}
 .top .in{display:flex;align-items:center;justify-content:space-between;gap:10px 16px;min-height:60px;flex-wrap:wrap;padding-block:8px}
 .mark{font-weight:800;font-size:17px;text-decoration:none;white-space:nowrap}
 .mark span{font-weight:300}
+.mark{display:inline-flex;align-items:center;gap:12px}
+.logo{font:600 15px/1 Poppins,"Schibsted Grotesk",Arial,sans-serif!important;letter-spacing:.14em;padding:7px 8px 6px 10px;border:2px solid currentColor}
+footer .logo{font-size:13px!important;padding:5px 6px 4px 8px;color:var(--ink)}
+.fake{display:inline-block;font-size:12px;line-height:1.2;padding:2px 7px;border:1px dashed currentColor;border-radius:999px;color:var(--mute);white-space:nowrap;letter-spacing:0;font-family:"Schibsted Grotesk",Arial,sans-serif;font-weight:400}
 nav{display:flex;gap:6px;flex-wrap:wrap}
 nav a,nav button{display:inline-flex;align-items:center;min-height:40px;padding:0 14px;border:1px solid var(--rule);border-radius:999px;background:none;text-decoration:none;font-size:15px;cursor:pointer;white-space:nowrap}
 nav a:hover{background:var(--soft)}
@@ -103,6 +107,7 @@ h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;tex
 .cat{font-size:14px;color:var(--mute);display:flex;flex-direction:column;gap:2px}
 .cat b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 .yours{color:var(--sig);font-weight:600}
+.cat .fake{align-self:flex-start;margin-top:6px}
 .ti{font-size:clamp(28px,3.4vw,46px);line-height:1.02;font-weight:560;margin:0;text-wrap:balance}
 .by{margin-top:10px;color:var(--mute);font-size:15px}
 .words{font-family:Newsreader,Georgia,serif;font-optical-sizing:auto;font-size:20px;line-height:1.45;margin:0;max-width:52ch}
@@ -114,8 +119,10 @@ h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;tex
 @keyframes land{from{background:color-mix(in srgb,var(--sig) 18%,transparent)}to{background:transparent}}
 /* hover like an index: the row becomes a full-bleed black bar */
 @media(hover:hover) and (pointer:fine){
-.row{transition:background .18s,color .18s,box-shadow .18s}
-.row:hover{background:var(--ink);color:var(--bg);box-shadow:0 0 0 100vmax var(--ink);clip-path:inset(0 -100vmax)}
+.row{position:relative;isolation:isolate;transition:color .18s}
+.row::before{content:"";position:absolute;inset:0 -100vmax;background:var(--ink);opacity:0;transition:opacity .18s;z-index:-1;pointer-events:none}
+.row:hover{color:var(--bg)}
+.row:hover::before{opacity:1}
 .row:hover .by,.row:hover .cat,.row:hover .meta{color:color-mix(in srgb,var(--bg) 62%,var(--ink))}
 .row:hover .cat b,.row:hover .meta i,.row:hover .find{color:var(--bg)}
 .row:hover .yours{color:var(--sig)}
@@ -145,6 +152,7 @@ h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;tex
 .cv.drawn .sh{opacity:1;transform:none}
 /* the one photograph */
 .photo{margin:0;padding-top:clamp(8px,2vw,20px)}
+#photo{padding-bottom:clamp(48px,7vw,96px)}
 .photo img{display:block;width:100%;aspect-ratio:21/8;object-fit:cover;filter:grayscale(1) contrast(1.08);background:var(--soft)}
 .photo figcaption{display:flex;justify-content:space-between;gap:12px;padding:10px 0 0;font-size:14px;color:var(--mute)}
 .empty{padding:40px 0;color:var(--mute);border-top:1px solid var(--rule)}
@@ -230,7 +238,7 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 <body>
 <header class="top band">
   <div class="in">
-    <a class="mark w" href="#top">PUBLIC Wrapped <span>2026</span></a>
+    <a class="mark w" href="#top" aria-label="PUBLIC Wrapped 2026"><span class="logo">PUBLIC</span><span style="font-weight:800">Wrapped <span>2026</span></span></a>
     <nav aria-label="Sections">
       <a href="#pick">Pick for me</a>
       <a href="#year">The year</a>
@@ -249,10 +257,10 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       <div class="lede">
         <div>
           <p class="ezgi">“The more AI &amp; tech I use, the more I find myself going to art &amp; human creativity to… reorient.”</p>
-          <p class="ezgi-by">Ezgi, who started this. Placeholder from her Slack message until she writes the intro.</p>
+          <p class="ezgi-by">Ezgi, who started this.</p>
         </div>
         <div class="side">
-          <p class="note">Example built from one person's picks.<br>Submissions close 10 December · reveal 17 December</p>
+          <p class="note">Entries marked <span class="fake">made-up example</span> are fake, just to show how it works.<br>Submissions close 10 December · reveal 17 December</p>
           <div class="acts">
             <button type="button" class="btn" id="playAll">Play the 2026 story</button>
             <button type="button" class="btn ghost" id="playGuess">Who picked this?</button>
@@ -306,7 +314,7 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
   <section class="band sec" id="playlist">
     <div class="in">
-      <div class="sec-h"><h2 class="w">The playlist</h2><p>One song each, whatever else you picked. At the reveal it becomes a shared Spotify playlist.</p></div>
+      <div class="sec-h"><h2 class="w">The playlist</h2><a class="btn ghost" href="https://open.spotify.com/playlist/0CmFCti8SOVzCZ17BHdYOr?si=e02ff03389ef48bd&amp;pt=36a2a65b704a70d9aeb758cb4b631860" target="_blank" rel="noopener">Open the playlist on Spotify</a></div>
       <div id="pl"></div>
     </div>
   </section>
@@ -347,7 +355,7 @@ footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 </main>
 
 <footer class="band">
-  <div class="in"><span>PUBLIC Wrapped 2026, made by the people of PUBLIC</span><span id="count"></span></div>
+  <div class="in"><span style="display:inline-flex;align-items:center;gap:10px"><span class="logo">PUBLIC</span> Wrapped 2026, made by the people of PUBLIC</span><span id="count"></span></div>
 </footer>
 
 <div class="whoM" id="whoM" role="dialog" aria-modal="true" aria-labelledby="whoT">
@@ -382,20 +390,25 @@ const MONL=['January','February','March','April','May','June','July','August','S
 const NOW=10; // November (0-based): later months are still to come
 const timeOf=m=>({Film:'evening',Show:'evening',Theatre:'out',Music:'minutes',Podcast:'minutes',Book:'weeks',Game:'weeks',Exhibition:'out','Night out':'out'}[m]||'any');
 const plural={Film:'films',Book:'books',Music:'music',Show:'shows',Game:'games',Exhibition:'exhibitions','Night out':'nights out',Podcast:'podcasts',Theatre:'plays',Other:'other'};
-const ME='Lucas P.';
 let picks=[
- {title:'La bola negra',medium:'Film',by:'Javier Calvo & Javier Ambrossi',year:'2026',month:9,words:"It reminded me of Spain, and of how beautiful cinema can be when it is made with care.",made:['remember','feel'],who:ME},
- {title:'The History of Concrete',medium:'Film',by:'John Wilson',year:'2025',month:3,words:"The funniest thing I've seen in a while, and somehow it still makes you stop and appreciate things a bit more afterwards.",made:['laugh','slow down'],who:ME},
- {title:'Spider-Man: Brand New Day',medium:'Film',by:'Destin Daniel Cretton',year:'2026',month:7,words:'Legendary.',made:['feel'],who:ME},
- {title:'Offside',medium:'Film',by:'Jafar Panahi',year:'2006',month:2,words:'Through football it explained so much more than football.',made:['think','learn'],who:ME},
- {title:'Blindness',medium:'Book',by:'José Saramago',year:'1995',month:5,words:"It made me think about the impermanence of things, about the power in seeing when others don't, and in not saying you see when they think you don't. And about not rushing through things to finish them: five months in, I still haven't finished it, even though I'm loving it and it isn't that long.",made:['think','slow down'],who:ME},
- {title:'Innervisions',medium:'Music',by:'Record label',year:'',month:8,words:"It was what was playing in the place I went to with two friends I hadn't seen in a long time. They were from different friend groups but really clicked, and that was really cool to see.",made:['connect','remember'],who:ME}
+ /* made-up examples, so the page shows what it looks like with people in it */
+ {title:'Whiplash',medium:'Film',by:'Damien Chazelle',year:'2014',month:0,words:"The drummer in me was furious the whole way through. Then I went home and practised for six hours.",made:['feel','feel inspired'],who:'Ringo',song:"Octopus's Garden",artist:'The Beatles',fake:true},
+ {title:'A Tuesday jazz night at the Vortex',medium:'Night out',by:'',year:'',month:4,words:'Went for one drink. Stayed for the drummer. Obviously.',made:['connect','feel inspired'],who:'Ringo',fake:true},
+ {title:'Be Here Now',medium:'Book',by:'Ram Dass',year:'1971',month:1,words:'Read it slowly. Then read it again, more slowly. Still not finished, and I think that is the point.',made:['slow down','think'],who:'George',song:'Dhun (Fast Teental)',artist:'Ravi Shankar',fake:true},
+ {title:'The Beatles: Get Back',medium:'Show',by:'Peter Jackson',year:'2021',month:2,words:'Very strange watching yourself fall out with your best mates, in 4K, for eight hours. Lovely jumpers, though.',made:['remember','laugh'],who:'Paul',song:'God Only Knows',artist:'The Beach Boys',fake:true},
+ {title:'Yoko Ono: Music of the Mind',medium:'Exhibition',by:'Tate Modern',year:'2024',month:3,words:'Climbed a ladder, looked through a magnifying glass, and it said YES. Best exhibition I have ever been to. I may be biased.',made:['feel','connect'],who:'John',song:'Be-Bop-A-Lula',artist:'Gene Vincent',fake:true},
+ {title:'Casino Royale',medium:'Book',by:'Ian Fleming',year:'1953',month:5,words:'Read it on the Tube pretending to be a spy. Nobody noticed, which I believe is the point.',made:['laugh','remember'],who:'Robert P (007)',song:'Nobody Does It Better',artist:'Carly Simon',fake:true},
+ {title:'Twilight',medium:'Film',by:'Catherine Hardwicke',year:'2008',month:9,words:"Rewatched it for the first time since. I still have no idea what I was doing with my face. Neither, I think, did anyone else.",made:['laugh','remember'],who:'Robert P (007)',fake:true},
+ {title:'World Press Photo 2026',medium:'Exhibition',by:'Southbank Centre',year:'2026',month:6,words:'As a freelance photographer with an editor who never pays me on time, this hit very close to home.',made:['think','feel inspired'],who:'Peter P (not Spiderman)',song:'Sunflower',artist:'Post Malone & Swae Lee',fake:true},
+ {title:'Spider-Man: Brand New Day',medium:'Film',by:'Destin Daniel Cretton',year:'2026',month:7,words:"Haven't seen it. No particular reason. I was busy that evening.",made:['laugh'],who:'Peter P (not Spiderman)',fake:true},
+ {title:'Oasis, Heaton Park',medium:'Night out',by:'Oasis',year:'2025',month:6,words:'Waited sixteen years for this. Eighty thousand people singing every word. And the trams ran on time, which I will be taking credit for.',made:['remember','connect'],who:'Not Andy Burnham',song:"Don't Look Back in Anger",artist:'Oasis',fake:true}
 ];
+const FAKE='<span class="fake">made-up example</span>';
 let view='list',filter='All',lastNew=-1,want='think',time='any',idx=0,me=null;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const cat=i=>'PW26.'+String(i+1).padStart(3,'0');
-const named=()=>[...new Set(picks.map(p=>p.who).filter(w=>w!=='Anonymous'))];
+const named=()=>[...new Set(picks.filter(p=>!p.fake).map(p=>p.who).filter(w=>w!=='Anonymous'))];
 const people=()=>new Set(picks.map(p=>p.who)).size;
 const countBy=(list,f)=>{const m={};list.forEach(p=>{const k=f(p);m[k]=(m[k]||0)+1;});return Object.entries(m).sort((a,b)=>b[1]-a[1]);};
 const medLabel=(k,v)=>k==='Music'?'music':(v===1?k.toLowerCase():plural[k]);
@@ -485,7 +498,7 @@ function renderPick(){
   const {p,i}=m[idx%m.length];
   $('result').innerHTML=`<div class="res">${cover(p)}<div><p class="k">${m.length>1?`${idx%m.length+1} of ${m.length} · `:''}${esc(p.medium)} · ${cat(i)}</p><h3 class="w">${esc(p.title)}</h3><div class="by">${esc([p.by,p.year].filter(Boolean).join(', '))}</div></div>
     <p class="words">“${esc(p.words)}”</p>
-    <div class="acts">${m.length>1?'<button type="button" class="btn" id="another">Another one</button>':''}<span class="by" style="margin:0">Chosen by ${esc(p.who)}</span>${find(p)}</div></div>`;
+    <div class="acts">${m.length>1?'<button type="button" class="btn" id="another">Another one</button>':''}<span class="by" style="margin:0">Chosen by ${esc(p.who)}</span>${p.fake?FAKE:''}${find(p)}</div></div>`;
 }
 $('pick').addEventListener('click',e=>{
   const w=e.target.closest('[data-w]'),t=e.target.closest('[data-t]');
@@ -523,14 +536,14 @@ function renderList(){
     $('list').innerHTML=`<div class="crate">${rows.map(({p,i})=>`
       <a class="ct${p.who===me?' mine':''}" href="#p${i}" data-open="${i}">
         <div class="frame">${cover(p)}<div class="over"><p>${esc(p.words)}</p><span>${esc(p.who)}</span></div></div>
-        <div class="cap"><span>${cat(i)}</span><span>${esc(p.medium)}</span></div>
+        <div class="cap"><span>${cat(i)}</span>${p.fake?FAKE:`<span>${esc(p.medium)}</span>`}</div>
         <h3 class="w">${esc(p.title)}</h3>
       </a>`).join('')}</div>`;
     return;
   }
   $('list').innerHTML=rows.map(({p,i})=>`
     <article class="row${i===lastNew?' new':''}" id="p${i}">
-      <div>${cover(p)}<div class="cat"><b>${cat(i)}</b><span>${esc(p.medium)}</span>${p.who===me?'<span class="yours">Yours</span>':''}</div></div>
+      <div>${cover(p)}<div class="cat"><b>${cat(i)}</b><span>${esc(p.medium)}</span>${p.who===me?'<span class="yours">Yours</span>':''}${p.fake?FAKE:''}</div></div>
       <div><h3 class="ti w">${esc(p.title)}</h3><div class="by">${esc([p.by,p.year].filter(Boolean).join(', '))}</div></div>
       <div><p class="words">${esc(p.words)}</p>
         <div class="meta"><span>Chosen by <i>${esc(p.who)}</i></span>${Number.isInteger(p.month)?`<span>Found them in <i>${MONL[p.month]}</i></span>`:''}${p.made?.length?`<span>Made them <i>${esc(p.made.join(', '))}</i></span>`:''}${p.pass?`<span>Pass it to <i>${esc(p.pass)}</i></span>`:''}${find(p)}</div>
@@ -552,7 +565,7 @@ $('filters').addEventListener('click',e=>{const b=e.target.closest('[data-f]');i
 function renderPlaylist(){
   const seen=new Set(),songs=[];
   picks.forEach(p=>{if(!p.song)return;const k=(p.song+'|'+p.artist).toLowerCase();if(seen.has(k))return;seen.add(k);songs.push(p);});
-  $('pl').innerHTML=songs.length?`<div class="pl">${songs.map((p,i)=>`<div><span class="n">${String(i+1).padStart(2,'0')}</span><span class="s">${esc(p.song)}${p.artist?` <span>${esc(p.artist)}</span>`:''}</span><span class="c">${esc(p.who)} · <a class="find" href="https://open.spotify.com/search/${encodeURIComponent(p.song+' '+(p.artist||''))}" target="_blank" rel="noopener">Spotify</a></span></div>`).join('')}</div>`
+  $('pl').innerHTML=songs.length?`<div class="pl">${songs.map((p,i)=>`<div><span class="n">${String(i+1).padStart(2,'0')}</span><span class="s">${esc(p.song)}${p.artist?` <span>${esc(p.artist)}</span>`:''}</span><span class="c">${esc(p.who)}${p.fake?' (made up)':''} · <a class="find" href="https://open.spotify.com/search/${encodeURIComponent(p.song+' '+(p.artist||''))}" target="_blank" rel="noopener">Spotify</a></span></div>`).join('')}</div>`
     :`<div class="pl pl-empty"><p>No songs yet. Add one with your picks, even if none of them were music.</p><a class="btn ghost" href="#add">Add a song</a></div>`;
 }
 
@@ -630,7 +643,7 @@ function show(i){
   clearTimeout(timer);
   if(mode!=='guess'&&at<slides.length-1)timer=setTimeout(()=>show(at+1),6000);
 }
-function reveal(){const sl=slides[at];if(typeof sl==='string'||revealed)return false;revealed=true;$('slide').querySelector('[data-reveal]').outerHTML=`<p class="named">${esc(sl.p.who)}</p>`;return true;}
+function reveal(){const sl=slides[at];if(typeof sl==='string'||revealed)return false;revealed=true;$('slide').querySelector('[data-reveal]').outerHTML=`<p class="named">${esc(sl.p.who)}</p>${sl.p.fake?'<p class="who">(a made-up example)</p>':''}`;return true;}
 function advance(){if(mode==='guess'&&reveal())return;show(at+1);}
 function openStory(m){
   mode=m;
