@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>{let t=null;try{t=localStorage.getItem('pw26-theme');}catch(e){}document.documentElement.dataset.theme=t==='light'?'light':'dark';}</script>
+<script>{let t=null;try{t=localStorage.getItem('pw26-theme');}catch(e){}document.documentElement.dataset.theme=t==='light'?'light':'dark';let a=null;try{a=localStorage.getItem('pw26-accent');}catch(e){}if(/^(pink|yellow|peach|blue|all)$/.test(a||''))document.documentElement.dataset.accent=a;}</script>
 <title>PUBLIC Wrapped 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -265,6 +265,7 @@ h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;tex
 .made{display:flex;gap:8px;flex-wrap:wrap}
 .made button{min-height:40px;padding:0 14px;border-radius:999px;border:1px solid color-mix(in srgb,var(--bg) 55%,transparent);background:none;color:var(--bg);cursor:pointer;font-size:15px}
 .made button[aria-pressed=true]{background:var(--sig);border-color:var(--sig);color:#111}
+.snote.now,.snote.now small{color:#111}
 .anon{display:flex!important;align-items:center;gap:10px;font-size:15px;margin:0!important}
 .anon input{width:20px;height:20px;accent-color:var(--sig)}
 .send{justify-self:start;min-height:48px;padding:0 26px;border-radius:999px;border:0;background:var(--bg);color:var(--ink);font-weight:600;cursor:pointer;font-size:16px}
@@ -378,6 +379,33 @@ footer .made{margin:0 0 clamp(14px,2vw,22px);display:flex;justify-content:space-
 .shead-r{display:flex;gap:8px}
 #sndT{border-color:var(--sig);color:var(--sig)}
 @media(prefers-reduced-motion:reduce){.i-q span,.i-quote>*,.i-stage.in>*,.i-welcome .stay{animation:none;opacity:1}.caret{animation:none}}
+
+/* accent colour: orange by default, or PUBLIC's colours one at a time, or all four mixed */
+:root{--c1:#f090a6;--c2:#fae056;--c3:#e9993f;--c4:#91c7fa;--on-sig:#fff}
+:root[data-accent=pink]{--sig:#f090a6;--on-sig:#111}
+:root[data-accent=yellow]{--sig:#fae056;--on-sig:#111}
+:root[data-accent=peach]{--sig:#e9993f;--on-sig:#111}
+:root[data-accent=blue]{--sig:#91c7fa;--on-sig:#111}
+:root[data-accent=all]{--sig:var(--c1);--on-sig:#111}
+[data-accent=all] :is(main>section,.row,.ct,.tile,.snote,.sp,.cas,.fo,.pl>div,.pill,.chip,.figs>div,nav>a,.made>button,.shelf>a,.aisle,.tally>div,.i-welcome>span,.stack,.slide,.acPop>button,.smap>div,.pk,.res):nth-child(4n+2){--sig:var(--c2)}
+[data-accent=all] :is(main>section,.row,.ct,.tile,.snote,.sp,.cas,.fo,.pl>div,.pill,.chip,.figs>div,nav>a,.made>button,.shelf>a,.aisle,.tally>div,.i-welcome>span,.stack,.slide,.acPop>button,.smap>div,.pk,.res):nth-child(4n+3){--sig:var(--c3)}
+[data-accent=all] :is(main>section,.row,.ct,.tile,.snote,.sp,.cas,.fo,.pl>div,.pill,.chip,.figs>div,nav>a,.made>button,.shelf>a,.aisle,.tally>div,.i-welcome>span,.stack,.slide,.acPop>button,.smap>div,.pk,.res):nth-child(4n+4){--sig:var(--c4)}
+[data-accent=all] .bigmark rect{stroke:var(--c4)}
+[data-accent=all] .bigmark .m-pub{fill:var(--c1)}
+[data-accent=all] .bigmark .m-wr tspan:first-child{fill:var(--c2)}
+[data-accent=all] .bigmark .m-wr tspan:last-child{fill:var(--c3)}
+.accent{position:relative;flex:none;display:flex;align-items:center}
+.acBtn{width:40px;height:40px;border-radius:50%;border:1px solid var(--rule);background:none;display:grid;place-items:center;cursor:pointer;padding:0}
+.accent i{display:block;width:18px;height:18px;border-radius:50%;background:var(--sig);flex:none}
+.accent i.mix,[data-accent=all] .acBtn i{background:conic-gradient(var(--c1) 0 25%,var(--c2) 0 50%,var(--c3) 0 75%,var(--c4) 0)}
+.acPop{position:absolute;right:0;top:calc(100% + 10px);z-index:6;min-width:200px;background:var(--bg);border:1px solid var(--rule);display:none;flex-direction:column}
+.accent.open .acPop{display:flex}
+.acPop button{display:flex;align-items:center;gap:12px;min-height:44px;padding:0 14px;border:0;border-bottom:1px solid color-mix(in srgb,var(--rule) 35%,transparent);background:none;color:var(--ink);font-size:15px;cursor:pointer;text-align:left;white-space:nowrap;width:auto;border-radius:0;justify-content:flex-start;font-weight:400;letter-spacing:0}
+.acPop button:last-child{border-bottom:0}
+.acPop button:hover{background:var(--soft)}
+.acPop button[aria-pressed=true]{font-weight:600}
+.acPop button[aria-pressed=true] i{box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px var(--ink)}
+nav .acPop button::before{content:none}
 /* phone polish */
 .swipe{display:none}
 .menuBtn{display:none;position:relative;z-index:13;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--rule);border-radius:999px;background:var(--bg);cursor:pointer;font-size:15px}
@@ -387,8 +415,10 @@ footer .made{margin:0 0 clamp(14px,2vw,22px);display:flex;justify-content:space-
 body.menu .menuBtn i::before{top:5px;transform:rotate(45deg)}
 body.menu .menuBtn i::after{top:5px;transform:rotate(-45deg)}
 .scrim{display:none}
+/* mid-size screens: a tighter nav so the header stays on one line */
+@media(min-width:1221px) and (max-width:1400px){nav{gap:4px}nav a,nav button{padding:0 11px;font-size:14px}.top .in{gap:10px 12px}.mark{gap:10px}nav .theme button{padding:0 10px}}
 /* narrow screens: the nav becomes a side panel */
-@media(max-width:1180px){
+@media(max-width:1220px){
 .top .in{flex-wrap:nowrap;min-height:56px;padding-block:6px}
 .mark{gap:10px;font-size:16px}
 .logo{font-size:13px!important;padding:5px 6px 4px 8px}
@@ -407,6 +437,10 @@ nav #meBtn{margin-top:22px;border-radius:999px;justify-content:center;font-size:
 body.menu .scrim{opacity:1;pointer-events:auto}
 body.menu .top{z-index:15}
 nav .theme{margin-top:14px;align-self:flex-start}
+nav .accent{margin-top:14px;align-self:stretch}
+nav .acBtn{display:none}
+nav .acPop{display:flex;position:static;flex-direction:row;flex-wrap:wrap;gap:6px;border:0;background:none;min-width:0}
+nav .acPop button{min-height:36px;padding:0 12px 0 8px;border:1px solid var(--rule);border-radius:999px;font-size:14px;gap:8px}
 }
 @media(max-width:600px){
 body{-webkit-tap-highlight-color:transparent}
@@ -456,7 +490,7 @@ body{-webkit-tap-highlight-color:transparent}
 }
 
 /* selection */
-::selection{background:var(--sig);color:#fff}
+::selection{background:var(--sig);color:var(--on-sig)}
 /* theme switch: same segmented pill as Index / Crate */
 .theme{flex:none}
 nav .theme button{min-height:32px;padding:0 12px;font-size:14px;width:auto;flex:none;justify-content:center;font-weight:400;letter-spacing:0;border:0;border-radius:999px}
@@ -525,6 +559,17 @@ body{transition:background-color .3s,color .3s}
       <a href="#add">Add yours</a>
       <button type="button" id="meBtn">Who are you?</button>
       <div class="view theme" role="group" aria-label="Colour theme"><button type="button" data-th="light" aria-pressed="false">Light</button><button type="button" data-th="dark" aria-pressed="false">Dark</button></div>
+      <div class="accent" id="accent">
+        <button type="button" class="acBtn" id="acBtn" aria-expanded="false" aria-controls="acPop" aria-label="Accent colour"><i></i></button>
+        <div class="acPop" id="acPop" role="group" aria-label="Accent colour">
+          <button type="button" data-ac="orange" aria-pressed="false"><i style="background:#ff4a12"></i><span>Orange</span></button>
+          <button type="button" data-ac="pink" aria-pressed="false"><i style="background:#f090a6"></i><span>Pink</span></button>
+          <button type="button" data-ac="yellow" aria-pressed="false"><i style="background:#fae056"></i><span>Yellow</span></button>
+          <button type="button" data-ac="peach" aria-pressed="false"><i style="background:#e9993f"></i><span>Light orange</span></button>
+          <button type="button" data-ac="blue" aria-pressed="false"><i style="background:#91c7fa"></i><span>Blue</span></button>
+          <button type="button" data-ac="all" aria-pressed="false"><i class="mix"></i><span>All four</span></button>
+        </div>
+      </div>
     </nav>
   </div>
 </header>
@@ -1101,6 +1146,21 @@ document.querySelector('.theme').addEventListener('click',e=>{
 dq.addEventListener?.('change',paint);paint();
 }
 
+
+/* accent colour switch */
+{
+const root=document.documentElement,acc=$('accent');
+const now=()=>root.dataset.accent||'orange';
+const paint=()=>acc.querySelectorAll('[data-ac]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.ac===now()));
+const open=v=>{acc.classList.toggle('open',v);$('acBtn').setAttribute('aria-expanded',v);};
+$('acBtn').addEventListener('click',e=>{e.stopPropagation();open(!acc.classList.contains('open'));});
+acc.addEventListener('click',e=>{const b=e.target.closest('[data-ac]');if(!b)return;
+  const v=b.dataset.ac;if(v==='orange')delete root.dataset.accent;else root.dataset.accent=v;
+  try{localStorage.setItem('pw26-accent',v);}catch(err){}paint();open(false);});
+document.addEventListener('click',e=>{if(!acc.contains(e.target))open(false);});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&acc.classList.contains('open')){open(false);$('acBtn').focus();}});
+paint();
+}
 /* the piece: one shape per pick, in the language of its cover */
 {
 const fig=$('artFig'),cv=$('artCv'),tip=$('artTip'),ctx=cv.getContext&&cv.getContext('2d');
@@ -1108,12 +1168,13 @@ const reduce=matchMedia('(prefers-reduced-motion: reduce)');
 function shapeFor(p){
   const r=rng(hash(p.title+'|'+p.medium));
   const fam={Film:['slab','frame'],Show:['slab','frame'],Theatre:['slab','frame'],Book:['bar'],Music:['disc','ring'],Podcast:['ring']}[p.medium]||['dots'];
-  return {p,type:fam[Math.floor(r()*fam.length)],s:.055+r()*.07,acc:r()<.16,phase:r()*Math.PI*2,x:.5,y:.5,tx:.5,ty:.5,k:1,tk:1,g:1,born:-1e9};
+  return {p,ci:Math.floor(r()*4),acc2:r()<.4,type:fam[Math.floor(r()*fam.length)],s:.055+r()*.07,acc:r()<.16,phase:r()*Math.PI*2,x:.5,y:.5,tx:.5,ty:.5,k:1,tk:1,g:1,born:-1e9};
 }
 let shapes=picks.map(shapeFor),seed=7,W=0,H=0,dpr=1,col={ink:'#111',bg:'#e9e8e3',sig:'#ff4a12',light:true};
 function readColours(){
   const cs=getComputedStyle($('artProbe'));
-  col={ink:cs.color,bg:cs.backgroundColor,sig:cs.borderTopColor};
+  const rs=getComputedStyle(document.documentElement);
+  col={ink:cs.color,bg:cs.backgroundColor,sig:rs.getPropertyValue('--sig').trim()||cs.borderTopColor,pal:['--c1','--c2','--c3','--c4'].map(k=>rs.getPropertyValue(k).trim()),mix:document.documentElement.dataset.accent==='all'};
   const m=col.bg.match(/\d+(\.\d+)?/g)||[233,232,227];
   col.light=(+m[0]*.299+ +m[1]*.587+ +m[2]*.114)>128;
 }
@@ -1137,7 +1198,7 @@ function drawShape(s,t){
   const still=reduce.matches;
   const cx=s.x*W+(still?0:Math.sin(t*.00023+s.phase)*W*.007);
   const cy=s.y*H+(still?0:Math.cos(t*.00019+s.phase*1.3)*H*.012);
-  const c=s.acc||t-s.born<3200?col.sig:col.ink;
+  const hot=(col.mix?s.acc2:s.acc)||t-s.born<3200,c=hot?(col.mix?col.pal[s.ci]:col.sig):col.ink;
   ctx.fillStyle=c;ctx.strokeStyle=c;
   switch(s.type){
     case'slab':ctx.fillRect(cx-S*1.3,cy-S*.28,S*2.6,S*.56);break;
@@ -1169,7 +1230,7 @@ function frame(t){
 if(ctx){
   new ResizeObserver(size).observe(fig);
   new IntersectionObserver(es=>{visible=es[0].isIntersecting;if(visible&&!raf){last=performance.now();raf=requestAnimationFrame(frame);}},{threshold:0}).observe(fig);
-  new MutationObserver(()=>{readColours();draw(performance.now());}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  new MutationObserver(()=>{readColours();draw(performance.now());}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme','data-accent']});
   matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change',()=>{readColours();draw(performance.now());});
 }
 const hit=e=>{
@@ -1495,6 +1556,7 @@ function size(){dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(i
 addEventListener('resize',size);size();
 const isDark=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':dark.matches;};
 function add(x,y,t){
+  if(!pts.length)pickSig();
   const last=pts[pts.length-1];
   if(last&&Math.hypot(x-last.x,y-last.y)<2)return;
   pts.push({x,y,t,j:(Math.random()-.5)*2,w:.55+Math.random()*.9});
@@ -1507,7 +1569,9 @@ addEventListener('pointermove',e=>{
 },{passive:true});
 document.addEventListener('mouseleave',()=>{pts=[];});
 const layer=document.createElement('canvas'),octx=layer.getContext&&layer.getContext('2d');
-const SIG=[255,74,18];
+const ACC={orange:[255,74,18],pink:[240,144,166],yellow:[250,224,86],peach:[233,153,63],blue:[145,199,250]},MIX=['pink','yellow','peach','blue'];
+let SIG=ACC.orange,strokeN=0;
+const pickSig=()=>{const a=document.documentElement.dataset.accent;SIG=a==='all'?ACC[MIX[strokeN++%4]]:ACC[a]||ACC.orange;};
 function frame(now){
   if(layer.width!==cv.width||layer.height!==cv.height){layer.width=cv.width;layer.height=cv.height;}
   ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,cv.width,cv.height);
