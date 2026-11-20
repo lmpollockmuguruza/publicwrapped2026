@@ -356,10 +356,24 @@ footer .made{margin:0 0 clamp(14px,2vw,22px);display:flex;justify-content:space-
 .i-list small{font-size:12px;color:var(--mute)}
 .i-list button:hover small{color:#555}
 .i-list .none{color:var(--mute);border-bottom:0}
+.intro.bare .i-top{visibility:hidden}
+.i-welcome{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.1em .32em;text-align:center;font-size:clamp(44px,8vw,120px);line-height:1;font-weight:560}
+.i-welcome>span{opacity:0;animation:rise 1.4s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
+.i-welcome>span:last-child{flex-basis:100%;font-weight:800}
+.i-welcome .logo{font-size:.62em!important;padding:.32em .3em .26em .42em;border-width:.07em;vertical-align:middle;display:inline-block;transform:translateY(-.06em)}
+.intro.bare .i-stage{align-items:stretch}
+.i-type{max-width:22ch}
+.i-type #iTyped{display:inline;opacity:1;animation:none;white-space:pre-wrap}
+.i-type .caret{display:inline-block;opacity:1;animation:blink 1s steps(1) infinite}
+.caret{display:inline-block;width:.06em;height:.9em;margin-left:.04em;background:var(--sig);vertical-align:-.08em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.i-by{opacity:0;transition:opacity 1.2s}
+.i-by.on{opacity:1}
+.i-stage.in>.i-by{animation:none}
 .story.over{z-index:45}
 .shead-r{display:flex;gap:8px}
 #sndT{border-color:var(--sig);color:var(--sig)}
-@media(prefers-reduced-motion:reduce){.i-q span,.i-quote>*,.i-stage.in>*{animation:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.i-q span,.i-quote>*,.i-stage.in>*,.i-welcome>span{animation:none;opacity:1}.caret{animation:none}}
 /* phone polish */
 .swipe{display:none}
 .menuBtn{display:none;position:relative;z-index:13;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--rule);border-radius:999px;background:var(--bg);cursor:pointer;font-size:15px}
@@ -1326,15 +1340,41 @@ const goBtn=(label,id='iGo',on=false)=>`<button type="button" class="i-go${on?' 
 function reveal(id){const b=$(id);if(b){b.classList.add('on');b.focus({preventScroll:true});}}
 function putArtBack(){if(art.parentNode!==artHome){artHome.insertBefore(art,artNext);artCtl.recolour();}}
 
-/* 1. the quote, like opening credits */
+/* 0. welcome: bare black, one word at a time */
+function welcome(){
+  box.classList.add('bare');
+  frame(0,`<div class="i-welcome w">
+    <span style="--d:.5s">Welcome</span><span style="--d:1.7s">to</span><span style="--d:2.9s"><span class="logo">PUBLIC</span></span><span style="--d:4.1s">Wrapped 2026</span></div>`,
+    `<span></span>${goBtn('Start')}`);
+  later(()=>reveal('iGo'),5400);
+  $('iGo').addEventListener('click',quote);
+}
+
+/* 1. the quote, typed live, mistakes and all */
 function quote(){
-  frame(1,`<div class="i-quote">
-    <p class="i-q serif"><span style="--d:.4s">“The more AI &amp; tech I use,</span><span style="--d:1.7s">the more I find myself going</span><span style="--d:3s">to art &amp; human creativity</span><span style="--d:4.3s">to… reorient.”</span></p>
-    <p class="i-by" style="--d:5.8s">Ezgi, who started this</p>
-    <p class="i-title w" style="--d:7.2s"><span class="logo">PUBLIC</span> Wrapped 2026</p></div>`,
-    `<span></span>${goBtn('Begin')}`);
-  later(()=>reveal('iGo'),8200);
-  $('iGo').addEventListener('click',piece);
+  box.classList.add('bare');
+  frame(1,`<p class="i-q serif i-type"><span id="iTyped"></span><span class="caret" aria-hidden="true"></span></p>
+    <p class="i-by" id="iBy">Ezgi, who started this</p>`,`<span></span>${goBtn('Continue')}`);
+  stepL.textContent='';
+  const out=$('iTyped'),full='“The more AI & tech I use, the more I find myself going to art & human creativity to… reorient.”';
+  $('iGo').addEventListener('click',()=>{box.classList.remove('bare');piece();});
+  const done=()=>{$('iBy').classList.add('on');later(()=>reveal('iGo'),1400);};
+  if(reduce){out.textContent=full;done();return;}
+  // type, slip, delete one; type, slip, delete two; finish
+  const script=[['type','“The more AI & tech I usee'],['del',1],['type',', the more I find myself goign'],['del',2],['type','ng to art & human creativity to… reorient.”']];
+  let k=0,buf='';
+  const pace=c=>c===','||c==='…'?380:c===' '?70+Math.random()*60:45+Math.random()*75;
+  (function run(){
+    const st=script[k];if(!st){later(done,700);return;}
+    if(st[0]==='type'){
+      if(!st.i)st.i=0;
+      if(st.i<st[1].length){const c=st[1][st.i++];buf+=c;out.textContent=buf;later(run,pace(c));return;}
+      k++;later(run,k===1||k===3?320:200);return;
+    }
+    if(!st.n)st.n=0;
+    if(st.n<st[1]){buf=buf.slice(0,-1);out.textContent=buf;st.n++;later(run,170);return;}
+    k++;later(run,260);
+  })();
 }
 
 /* 2. one piece: no moving on until it has shifted at least once */
@@ -1413,13 +1453,13 @@ function name(){
 }
 
 function finish(toAdd){
-  clear();putArtBack();artCtl.onShift=null;
+  clear();putArtBack();artCtl.onShift=null;box.classList.remove('bare');
   try{localStorage.setItem('pw26-intro','done');}catch(e){}
   box.classList.remove('on');document.body.style.overflow='';introOn=false;
   if(toAdd){jumpTo('add');setTimeout(()=>$('f-title').focus({preventScroll:true}),500);}else window.scrollTo(0,0);
 }
 window.startIntro=()=>{
-  closeStory();introOn=true;box.classList.add('on');document.body.style.overflow='hidden';setMenu(false);quote();
+  closeStory();introOn=true;box.classList.add('on');document.body.style.overflow='hidden';setMenu(false);welcome();
 };
 $('replay').addEventListener('click',()=>window.startIntro());
 }
