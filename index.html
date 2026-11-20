@@ -318,6 +318,48 @@ footer .made{margin:0 0 clamp(14px,2vw,22px);display:flex;justify-content:space-
 @media(max-width:820px){.row{grid-template-columns:96px minmax(0,1fr);gap:14px 18px}.row>:nth-child(3){grid-column:1/-1}.row .cv{margin-bottom:8px}.cat{font-size:13px}.add .in,.pick .in,.you .in{grid-template-columns:minmax(0,1fr)}.shelf{justify-content:flex-start}}
 @media(max-width:600px){.lede{grid-template-columns:minmax(0,1fr)}.side{align-items:flex-start;text-align:left}.three{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.three>div:first-child{grid-column:1/-1}.two{grid-template-columns:minmax(0,1fr)}.figs div:nth-child(2n){border-right:0}.figs div{padding-left:0!important}.words{font-size:18px}.res{grid-template-columns:88px minmax(0,1fr);gap:16px}.res>.cv{grid-row:auto}.res .words,.res .acts{grid-column:1/-1}.pl>div{grid-template-columns:2.2em minmax(0,1fr)}.pl .c{grid-column:2;text-align:left}.shelf a{width:72px}}
 @media(max-width:600px){.photo img{aspect-ratio:4/3}.crate{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 14px}}
+
+/* the opening */
+.intro{position:fixed;inset:0;z-index:40;display:none;flex-direction:column;background:#0b0b0a;color:#eeede8;--bg:#0b0b0a;--ink:#eeede8;--soft:#1c1c1a;--rule:#3a3a37;--mute:#8d8c86;color-scheme:dark}
+.intro.on{display:flex}
+.i-top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px max(5vw,16px);font-size:13px;color:var(--mute)}
+.i-top .logo{color:var(--ink);font-size:12px!important;padding:5px 6px 4px 8px}
+.i-stage{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;padding:0 max(7vw,20px);max-width:1240px;width:100%;margin:0 auto;overflow:auto}
+.i-stage.in>*{animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+.i-foot{display:flex;justify-content:space-between;align-items:center;gap:12px 20px;flex-wrap:wrap;padding:12px max(5vw,16px) 26px;min-height:84px}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.i-quote>*{opacity:0;animation:rise 1.6s cubic-bezier(.2,.7,.2,1) var(--d,0s) forwards}
+.i-stage.in .i-quote{animation:none}
+.i-q{font-size:clamp(30px,4.8vw,66px);line-height:1.14;margin:0;font-weight:400;letter-spacing:-.01em;opacity:1;animation:none}
+.i-q span{display:block;opacity:0;animation:rise 1.6s cubic-bezier(.2,.7,.2,1) var(--d) forwards}
+.i-by{margin:28px 0 0;color:var(--mute);font-size:16px}
+.i-title{margin:clamp(40px,8vh,80px) 0 0;display:flex;align-items:center;gap:14px;font-size:clamp(22px,2.6vw,32px);font-weight:800}
+.i-title .logo{font-size:clamp(14px,1.6vw,20px)!important;padding:.4em .45em .35em .6em}
+.i-k{font-size:15px;color:var(--mute);margin:0 0 16px}
+.i-h{font-size:clamp(44px,8vw,112px);line-height:.94;font-weight:560;margin:0;text-wrap:balance}
+.i-p{font-size:clamp(17px,1.6vw,20px);color:var(--mute);max-width:44ch;margin:22px 0 0;min-height:1.5em}
+.i-note{margin:0;color:var(--mute);font-size:15px;max-width:48ch}
+.i-go{min-height:50px;padding:0 26px;border-radius:999px;border:0;background:#eeede8;color:#111;font-weight:600;font-size:16px;cursor:pointer;opacity:0;pointer-events:none;transform:translateY(6px);transition:opacity .7s,transform .7s;margin-left:auto}
+.i-go.on{opacity:1;pointer-events:auto;transform:none}
+.i-quiet{color:var(--mute)}
+.i-play{margin-top:34px;align-self:flex-start;--ink:#eeede8}
+.intro .art{height:min(56vh,560px)}
+.intro .artcap{display:none}
+.i-pick{position:relative;z-index:3;margin-top:30px;width:min(560px,100%)}
+.i-sel{width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:64px;padding:8px 0;border:0;border-bottom:1px solid var(--ink);background:none;color:var(--mute);cursor:pointer;font-size:clamp(22px,2.6vw,30px);font-weight:560;letter-spacing:-.025em;text-align:left}
+.i-sel.set{color:var(--ink)}
+.i-sel i{width:12px;height:12px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-4px);transition:transform .2s;flex:none}
+.i-sel[aria-expanded=true] i{transform:rotate(-135deg)}
+.i-list{position:absolute;left:0;right:0;top:100%;z-index:2;background:#0b0b0a;border:1px solid var(--rule);border-top:0;max-height:min(46vh,360px);overflow:auto}
+.i-list button{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;min-height:52px;padding:0 16px;border:0;border-bottom:1px solid var(--rule);background:none;color:var(--ink);font-size:18px;text-align:left;cursor:pointer}
+.i-list button:hover,.i-list button:focus-visible{background:#eeede8;color:#111;outline:none}
+.i-list small{font-size:12px;color:var(--mute)}
+.i-list button:hover small{color:#555}
+.i-list .none{color:var(--mute);border-bottom:0}
+.story.over{z-index:45}
+.shead-r{display:flex;gap:8px}
+#sndT{border-color:var(--sig);color:var(--sig)}
+@media(prefers-reduced-motion:reduce){.i-q span,.i-quote>*,.i-stage.in>*{animation:none;opacity:1}}
 /* phone polish */
 .swipe{display:none}
 .menuBtn{display:none;position:relative;z-index:13;align-items:center;gap:8px;min-height:40px;padding:0 14px;border:1px solid var(--rule);border-radius:999px;background:var(--bg);cursor:pointer;font-size:15px}
@@ -484,6 +526,7 @@ body{transition:background-color .3s,color .3s}
           <div class="acts">
             <button type="button" class="btn" id="playAll">Play the 2026 story</button>
             <button type="button" class="btn ghost" id="playGuess">Who picked this?</button>
+            <button type="button" class="linkbtn" id="replay">Watch the opening again</button>
           </div>
         </div>
       </div>
@@ -523,12 +566,14 @@ body{transition:background-color .3s,color .3s}
   <section class="band sec" id="piece">
     <div class="in">
       <div class="sec-h"><h2 class="w">Our year, one piece</h2><p>Every pick adds a shape in the language of its cover: films are slabs and frames, books are spines, music is discs and rings. Hover a shape to see whose it is.</p></div>
+      <div id="artWrap">
       <figure class="art" id="artFig">
         <canvas id="artCv" role="img" aria-label="A slowly changing composition made of one shape per pick"></canvas>
         <div class="tip" id="artTip" role="status"></div>
       </figure>
       <div class="artcap"><span id="artCapL"></span><span id="artCapR"></span></div>
       <span id="artProbe" style="position:absolute;width:0;height:0;overflow:hidden;color:var(--ink);background:var(--bg);border:0 solid var(--sig)" aria-hidden="true"></span>
+      </div>
     </div>
   </section>
 
@@ -623,9 +668,15 @@ body{transition:background-color .3s,color .3s}
   </div>
 </div>
 
+<div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="PUBLIC Wrapped 2026, the opening">
+  <div class="i-top"><span class="logo">PUBLIC</span><span id="iStep"></span></div>
+  <div class="i-stage" id="iStage"></div>
+  <div class="i-foot" id="iFoot"></div>
+</div>
+
 <div class="story" id="story" role="dialog" aria-modal="true" aria-label="PUBLIC Wrapped story">
   <div class="bars" id="bars"></div>
-  <div class="shead"><span id="stitle">PUBLIC Wrapped 2026</span><button type="button" id="closeStory">Close</button></div>
+  <div class="shead"><span id="stitle">PUBLIC Wrapped 2026</span><span class="shead-r"><button type="button" id="sndT" hidden>Sound on</button><button type="button" id="closeStory">Close</button></span></div>
   <div class="slide w" id="slide" aria-live="polite"></div>
   <div class="stepnav"><button type="button" id="prev" aria-label="Previous">←</button><button type="button" id="next" aria-label="Next">→</button></div>
 </div>
@@ -917,6 +968,7 @@ function renderPlaylist(){
 }
 
 const hooks=[];
+let artCtl={shift(){},recolour(){},onShift:null},soundCtl={playing:false,start(){},stop(){}},introOn=false,storyOpts={};
 function render(){renderYou();renderPick();renderYear();renderFigs();renderFilters();renderList();renderPlaylist();hooks.forEach(f=>f());}
 function goPick(i){const id='p'+i;if(view!=='list'||!$(id)){filter='All';renderFilters();setView('list');}$(id)?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'center'});}
 
@@ -968,7 +1020,7 @@ function buildStory(list,who){
   [...list].sort((a,b)=>b.words.length-a.words.length).slice(0,2).forEach(p=>s.push(`<div class="scv">${cover(p)}</div><p class="k">${esc(p.title)}</p><p class="q">“${esc(p.words)}”</p>${you?'':`<p class="who">${esc(p.who)}</p>`}`));
   const short=[...list].sort((a,b)=>a.words.length-b.words.length)[0];
   if(short.words.length<40)s.push(`<p class="k">Shortest review of the year</p><p class="mid">“${esc(short.words)}”</p><p class="who">${you?'You':esc(short.who)} on ${esc(short.title)}</p>`);
-  s.push(you?`<p class="k">That's your 2026</p><p class="mid">Thank you for adding yours.</p>`:`<p class="k">Your turn</p><p class="mid">What stayed with you?</p><button type="button" class="cta" data-go="add">Add yours</button>`);
+  s.push(you?`<p class="k">That's your 2026</p><p class="mid">Thank you for adding yours.</p>`:storyOpts.intro?`<p class="k">That was everyone's 2026</p><p class="mid">Thank you.</p><p class="who">Tap to carry on.</p>`:`<p class="k">Your turn</p><p class="mid">What stayed with you?</p><button type="button" class="cta" data-go="add">Add yours</button>`);
   return s;
 }
 function buildGuess(){
@@ -993,14 +1045,14 @@ function show(i){
   if(mode!=='guess'&&at<slides.length-1)timer=setTimeout(()=>show(at+1),6000);
 }
 function reveal(){const sl=slides[at];if(typeof sl==='string'||revealed)return false;revealed=true;$('slide').querySelector('[data-reveal]').outerHTML=`<p class="named">${esc(sl.p.who)}</p>${sl.p.fake?'<p class="who">(a made-up example)</p>':''}`;return true;}
-function advance(){if(mode==='guess'&&reveal())return;show(at+1);}
-function openStory(m){
-  mode=m;
+function advance(){if(mode==='guess'&&reveal())return;if(at>=slides.length-1&&storyOpts.onEnd){closeStory();return;}show(at+1);}
+function openStory(m,opts={}){
+  mode=m;storyOpts=opts;
   slides=m==='guess'?buildGuess():buildStory(m==='mine'?picks.filter(p=>p.who===me):picks,m==='mine'?me:null);
   $('stitle').textContent=m==='guess'?'Who picked this?':m==='mine'?'Your 2026':'PUBLIC Wrapped 2026';
-  $('story').classList.add('on');document.body.style.overflow='hidden';show(0);$('closeStory').focus();
+  $('story').classList.add('on');$('story').classList.toggle('over',!!opts.intro);document.body.style.overflow='hidden';show(0);$('closeStory').focus();
 }
-function closeStory(){clearTimeout(timer);$('story').classList.remove('on');document.body.style.overflow='';}
+function closeStory(){clearTimeout(timer);const was=$('story').classList.contains('on');$('story').classList.remove('on','over');document.body.style.overflow=introOn?'hidden':'';const f=storyOpts.onEnd;storyOpts={};if(was&&f)f();}
 $('playAll').addEventListener('click',()=>openStory('all'));
 $('playGuess').addEventListener('click',()=>openStory('guess'));
 $('closeStory').addEventListener('click',closeStory);
@@ -1092,7 +1144,7 @@ function frame(t){
   const dt=Math.min(64,t-last);last=t;
   const e=reduce.matches?1:1-Math.exp(-dt/1400),eg=reduce.matches?1:1-Math.exp(-dt/700);
   shapes.forEach(s=>{s.x+=(s.tx-s.x)*e;s.y+=(s.ty-s.y)*e;s.k+=(s.tk-s.k)*e;s.g+=(1-s.g)*eg;});
-  if(!reduce.matches){since+=dt;if(since>9000){since=0;seed++;layout();}}
+  if(!reduce.matches){since+=dt;if(since>9000){since=0;seed++;layout();artCtl.onShift&&artCtl.onShift();}}
   draw(t);
   raf=visible?requestAnimationFrame(frame):0;
 }
@@ -1115,7 +1167,9 @@ cv.addEventListener('pointermove',e=>{
   tip.style.left=Math.max(8,Math.min(x+14,W-250))+'px';tip.style.top=Math.max(8,y-56)+'px';tip.classList.add('on');
 });
 cv.addEventListener('pointerleave',()=>tip.classList.remove('on'));
-cv.addEventListener('click',e=>{const {best}=hit(e);if(best)goPick(picks.indexOf(best.p));});
+cv.addEventListener('click',e=>{if(introOn)return;const {best}=hit(e);if(best)goPick(picks.indexOf(best.p));});
+artCtl.shift=()=>{since=0;seed++;layout();if(!raf&&ctx){last=performance.now();raf=requestAnimationFrame(frame);}artCtl.onShift&&artCtl.onShift();};
+artCtl.recolour=()=>{readColours();size();};
 function caption(){
   const ppl=new Set(picks.map(p=>p.who)).size;
   $('artCapL').innerHTML=`Made from <b>${picks.length}</b> ${picks.length===1?'pick':'picks'} by <b>${ppl}</b> ${ppl===1?'person':'people'}`;
@@ -1200,14 +1254,14 @@ async function start(){
   if(ctx.state==='suspended')await ctx.resume();
   const t=ctx.currentTime;A.master.gain.cancelScheduledValues(t);A.master.gain.setValueAtTime(A.master.gain.value,t);A.master.gain.linearRampToValueAtTime(1,t+2.5);
   next=t+.6;idx=0;playing=true;timer=setInterval(tick,120);tick();
-  $('sPlay').setAttribute('aria-pressed','true');$('sPlay').textContent='Stop';
+  $('sPlay').setAttribute('aria-pressed','true');$('sPlay').textContent='Stop';$('sndT').hidden=false;
   $('sStatus').textContent='Starting…';
 }
 function stop(){
   if(!ctx)return;playing=false;clearInterval(timer);
   const t=ctx.currentTime,c=ctx;A.master.gain.cancelScheduledValues(t);A.master.gain.setValueAtTime(A.master.gain.value,t);A.master.gain.linearRampToValueAtTime(0,t+1.6);
   setTimeout(()=>c.close(),1900);ctx=null;A=null;
-  $('sPlay').setAttribute('aria-pressed','false');$('sPlay').textContent='Listen';
+  $('sPlay').setAttribute('aria-pressed','false');$('sPlay').textContent='Listen';$('sndT').hidden=true;
   document.querySelectorAll('.snote.now').forEach(n=>n.classList.remove('now'));
   $('sStatus').textContent='Stopped. Press Listen to hear it again.';
 }
@@ -1235,6 +1289,8 @@ $('sPlay').addEventListener('click',()=>playing?stop():start());
 $('sVol').addEventListener('input',setVol);
 window.addEventListener('pagehide',()=>{if(playing)stop();});
 hooks.push(refresh);
+soundCtl={start,stop,get playing(){return playing;}};
+$('sndT').addEventListener('click',e=>{e.stopPropagation();stop();});
 }
 
 
@@ -1252,13 +1308,130 @@ function fitMarks(){document.querySelectorAll('.bigmark').forEach(svg=>{
   const a=svg.getBBox();svg.setAttribute('viewBox',[a.x-sw/2,a.y-sw/2,a.width+sw,a.height+sw].map(v=>v.toFixed(1)).join(' '));
 });}
 fitMarks();document.fonts?.ready.then(fitMarks);addEventListener('resize',fitMarks);
+/* ---------- the opening: quote, one piece, listen, company reel, game, name, personal reel, site ---------- */
+{
+const box=$('intro'),stage=$('iStage'),foot=$('iFoot'),stepL=$('iStep');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const art=$('artWrap'),artHome=art.parentNode,artNext=art.nextSibling;
+const STEPS=['The quote','One piece','Listen','The reel','The game','You'];
+let timers=[];
+const later=(f,ms)=>timers.push(setTimeout(f,reduce?Math.min(ms,300):ms));
+const clear=()=>{timers.forEach(clearTimeout);timers=[];};
+function frame(n,html,footHtml=''){
+  clear();stepL.textContent=n?`${n} / ${STEPS.length} · ${STEPS[n-1]}`:'';
+  stage.innerHTML=html;foot.innerHTML=footHtml;
+  stage.classList.remove('in');void stage.offsetWidth;stage.classList.add('in');
+}
+const goBtn=(label,id='iGo',on=false)=>`<button type="button" class="i-go${on?' on':''}" id="${id}">${label}</button>`;
+function reveal(id){const b=$(id);if(b){b.classList.add('on');b.focus({preventScroll:true});}}
+function putArtBack(){if(art.parentNode!==artHome){artHome.insertBefore(art,artNext);artCtl.recolour();}}
+
+/* 1. the quote, like opening credits */
+function quote(){
+  frame(1,`<div class="i-quote">
+    <p class="i-q serif"><span style="--d:.4s">“The more AI &amp; tech I use,</span><span style="--d:1.7s">the more I find myself going</span><span style="--d:3s">to art &amp; human creativity</span><span style="--d:4.3s">to… reorient.”</span></p>
+    <p class="i-by" style="--d:5.8s">Ezgi, who started this</p>
+    <p class="i-title w" style="--d:7.2s"><span class="logo">PUBLIC</span> Wrapped 2026</p></div>`,
+    `<span></span>${goBtn('Begin')}`);
+  later(()=>reveal('iGo'),8200);
+  $('iGo').addEventListener('click',piece);
+}
+
+/* 2. one piece: no moving on until it has shifted at least once */
+function piece(){
+  frame(2,`<p class="i-k">Our year, one piece</p><div id="iArt"></div>`,
+    `<p class="i-note" id="iNote">Every pick is a shape in the language of its cover. Watch it move.</p>${goBtn('Continue')}`);
+  $('iArt').appendChild(art);artCtl.recolour();
+  let shifted=false;
+  artCtl.onShift=()=>{if(shifted)return;shifted=true;later(()=>{reveal('iGo');$('iNote').textContent='It rearranges itself, and grows with every pick.';},1800);};
+  later(()=>artCtl.shift(),3600);
+  $('iGo').addEventListener('click',()=>{artCtl.onShift=null;listen();});
+}
+
+/* 3. listen: start the sound here so it plays under the reel */
+function listen(){
+  frame(3,`<p class="i-k">Our year, one piece</p><h2 class="i-h w">Now listen to it.</h2>
+    <p class="i-p">Each pick is one note. The feelings people chose set the key, the pace and the space. It keeps playing while the year plays back.</p>
+    <button type="button" class="play i-play" id="iPlay" aria-pressed="${soundCtl.playing}">${soundCtl.playing?'Stop':'Listen'}</button>`,
+    `<button type="button" class="linkbtn i-quiet" id="iQuiet">Continue in silence</button>${goBtn('Play the 2026 reel','iGo',soundCtl.playing)}`);
+  $('iPlay').addEventListener('click',async()=>{
+    if(soundCtl.playing)soundCtl.stop();else await soundCtl.start();
+    $('iPlay').setAttribute('aria-pressed',soundCtl.playing);$('iPlay').textContent=soundCtl.playing?'Stop':'Listen';
+    if(soundCtl.playing)reveal('iGo');
+  });
+  $('iQuiet').addEventListener('click',()=>{if(soundCtl.playing)soundCtl.stop();reel();});
+  $('iGo').addEventListener('click',reel);
+}
+
+/* 4. the company reel */
+function reel(){
+  putArtBack();
+  frame(4,`<p class="i-k">The reel</p><h2 class="i-h w">Everyone’s 2026.</h2>`);
+  openStory('all',{intro:true,onEnd:game});
+}
+
+/* 5. the game, offered rather than forced */
+function game(){
+  frame(5,`<p class="i-k">One last thing</p><h2 class="i-h w">Who picked this?</h2>
+    <p class="i-p">Read each one out, let the room guess, then reveal.</p>`,
+    `<button type="button" class="linkbtn i-quiet" id="iSkip">Not now</button>${goBtn('Play the game','iGo',true)}`);
+  $('iGo').addEventListener('click',()=>openStory('guess',{intro:true,onEnd:name}));
+  $('iSkip').addEventListener('click',name);
+}
+
+/* 6. who are you: a list in the site's own style */
+function name(){
+  const ppl=[...new Set(picks.filter(p=>p.who!=='Anonymous').map(p=>p.who))];
+  frame(6,`<p class="i-k">Finally</p><h2 class="i-h w">Who are you?</h2>
+    <div class="i-pick">
+      <button type="button" class="i-sel" id="iSel" aria-haspopup="listbox" aria-expanded="false"><span>Choose your name</span><i aria-hidden="true"></i></button>
+      <div class="i-list" id="iList" role="listbox" hidden>
+        ${ppl.map(n=>`<button type="button" role="option" data-n="${esc(n)}">${esc(n)}${picks.some(p=>p.who===n&&p.fake)?' <small>made-up example</small>':''}</button>`).join('')}
+        <button type="button" role="option" data-n="" class="none">I didn’t fill the form</button>
+      </div>
+    </div>
+    <p class="i-p" id="iMsg" aria-live="polite"></p>`,
+    `<span></span>${goBtn('Continue')}`);
+  let chosen;
+  const open=v=>{$('iList').hidden=!v;$('iSel').setAttribute('aria-expanded',v);if(v)$('iList').querySelector('button').focus();};
+  $('iSel').addEventListener('click',()=>open($('iList').hidden));
+  $('iList').addEventListener('keydown',e=>{if(e.key==='Escape'){open(false);$('iSel').focus();}
+    const bs=[...$('iList').querySelectorAll('button')],k=bs.indexOf(document.activeElement);
+    if(e.key==='ArrowDown'){e.preventDefault();bs[Math.min(bs.length-1,k+1)].focus();}
+    if(e.key==='ArrowUp'){e.preventDefault();bs[Math.max(0,k-1)].focus();}});
+  $('iList').addEventListener('click',e=>{
+    const b=e.target.closest('[data-n]');if(!b)return;chosen=b.dataset.n;
+    $('iSel').querySelector('span').textContent=chosen||'I didn’t fill the form';$('iSel').classList.add('set');open(false);
+    $('iMsg').textContent=chosen?`Hello, ${chosen}.`:'You will after this.';
+    $('iGo').textContent=chosen?'Play my 2026':'Show me the site';reveal('iGo');
+  });
+  $('iGo').addEventListener('click',()=>{
+    if(chosen===undefined)return;
+    if(chosen){setMe(chosen);openStory('mine',{intro:true,onEnd:()=>finish(false)});}
+    else{store.set('-');me=null;render();finish(true);}
+  });
+}
+
+function finish(toAdd){
+  clear();putArtBack();artCtl.onShift=null;
+  try{localStorage.setItem('pw26-intro','done');}catch(e){}
+  box.classList.remove('on');document.body.style.overflow='';introOn=false;
+  if(toAdd){jumpTo('add');setTimeout(()=>$('f-title').focus({preventScroll:true}),500);}else window.scrollTo(0,0);
+}
+window.startIntro=()=>{
+  closeStory();introOn=true;box.classList.add('on');document.body.style.overflow='hidden';setMenu(false);quote();
+};
+$('replay').addEventListener('click',()=>window.startIntro());
+}
+
 const saved=store.get();
 me=saved&&saved!=='-'?saved:null;
 if(me)$('f-name').value=me;
 render();drawCovers();
-if(saved===null)openWho();
 $('whoSkip').addEventListener('click',()=>store.set('-'));
-if(location.hash==='#story')openStory('all');
+let seen=null;try{seen=localStorage.getItem('pw26-intro');}catch(e){}
+if(seen!=='done')window.startIntro();
+else if(location.hash==='#story')openStory('all');
 }
 </script>
 <canvas class="trace" id="trace" aria-hidden="true"></canvas>
