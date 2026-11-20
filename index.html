@@ -158,7 +158,23 @@ h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;tex
 .aisle-h span{font-size:14px;color:var(--mute);white-space:nowrap}
 .bay{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,360px);gap:24px 32px;align-items:start}
 .rack{display:flex;align-items:flex-end;gap:3px;min-height:310px;padding:34px 16px 0;background:var(--soft);border-bottom:8px solid var(--ink);overflow-x:auto;scrollbar-width:thin}
-.rack.book{min-height:280px}
+.rack.book{min-height:290px;gap:14px}
+.sp.bk{perspective:700px;perspective-origin:50% 20%}
+.sp.bk .face{transform-style:preserve-3d;transform:rotateY(-14deg);border:0;border-radius:3px 3px 2px 2px;
+  background:linear-gradient(var(--bd,transparent),var(--bd,transparent)) 0 calc(100% - 30px)/100% 9px no-repeat,
+    linear-gradient(90deg,rgba(0,0,0,.22),rgba(0,0,0,0) 18%,rgba(255,255,255,.16) 42%,rgba(255,255,255,0) 62%,rgba(0,0,0,.25)),
+    linear-gradient(transparent 14px,currentColor 14px,currentColor 15px,transparent 15px,transparent calc(100% - 15px),currentColor calc(100% - 15px),currentColor calc(100% - 14px),transparent calc(100% - 14px)),
+    var(--c);
+  box-shadow:none;transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.sp.bk .face::after{content:"";position:absolute;top:4px;bottom:4px;left:100%;width:var(--d);transform-origin:left center;transform:rotateY(90deg);
+  background:linear-gradient(90deg,rgba(0,0,0,.18),transparent 30%),repeating-linear-gradient(180deg,#f4f0e6 0 2px,#d8d1c0 2px 3px);border-radius:0 2px 2px 0}
+.sp.bk .t{font-family:Newsreader,Georgia,serif;font-optical-sizing:auto;font-weight:500;font-size:15px;letter-spacing:0}
+.sp.bk .a{font-family:Newsreader,Georgia,serif;font-style:italic;font-size:12px}
+.sp.bk:hover .face,.sp.bk:focus-visible .face,.sp.bk.up .face{transform:translateY(-18px) translateZ(26px) rotateY(-42deg);box-shadow:none}
+.sp.bk.up .face,.sp.bk:focus-visible .face{outline:none}
+.sp.bk::before{content:"";position:absolute;left:-4px;right:-16px;bottom:-2px;height:12px;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.28),transparent);opacity:0;transition:opacity .45s}
+.sp.bk:hover::before,.sp.bk.up::before{opacity:1}
+.sp.bk.up::after{content:"";position:absolute;left:0;right:-10px;bottom:-14px;height:3px;background:var(--sig)}
 .rack.other{gap:16px;min-height:250px}
 .rack.music{gap:22px;overflow:visible;min-height:240px}
 .sp{flex:none;position:relative;width:var(--w);height:var(--h);padding:0;margin:0;border:0;background:none;cursor:pointer;font:inherit;text-decoration:none;color:var(--t)}
@@ -255,8 +271,11 @@ h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;tex
 .err{color:var(--sig);font-size:14px;min-height:1.2em;margin:0}
 .small{font-size:13px;opacity:.6;margin:0}
 .sub{font-size:22px;font-weight:560;margin:12px 0 0;padding-top:22px;border-top:1px solid color-mix(in srgb,var(--bg) 25%,transparent)}
-footer{padding-top:28px;padding-bottom:36px;font-size:14px;color:var(--mute)}
-footer .in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer{padding-top:clamp(56px,8vw,120px);padding-bottom:clamp(14px,2vw,24px);font-size:14px;color:var(--mute)}
+footer .made{margin:0 0 clamp(14px,2vw,22px);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.bigmark{display:block;width:100%;height:auto;color:var(--sig);overflow:visible}
+.bigmark.tall{display:none}
+@media(max-width:600px){.bigmark.wide{display:none}.bigmark.tall{display:block}}
 /* who are you */
 .whoM{position:fixed;inset:0;z-index:30;background:color-mix(in srgb,#000 55%,transparent);display:none;align-items:center;justify-content:center;padding:16px}
 .whoM.on{display:flex}
@@ -373,7 +392,6 @@ body{-webkit-tap-highlight-color:transparent}
 .pl .c{margin-top:2px}
 .add .intro p{font-size:16px}
 .sub{font-size:19px}
-footer .in{flex-direction:column;gap:6px}
 .slide{padding-bottom:2vh}
 }
 
@@ -586,7 +604,9 @@ body{transition:background-color .3s,color .3s}
 </main>
 
 <footer class="band">
-  <div class="in"><span style="display:inline-flex;align-items:center;gap:10px"><span class="logo">PUBLIC</span> Wrapped 2026, made by the people of PUBLIC</span><span id="count"></span></div>
+  <p class="made"><span>Made by the people that make PUBLIC</span><span>2026</span></p>
+  <svg class="bigmark wide" role="img" aria-label="PUBLIC Wrapped 2026"><rect fill="none" stroke="currentColor"/><text class="m-pub" font-family="Poppins,Arial,sans-serif" font-weight="600" fill="currentColor">PUBLIC</text><text class="m-wr" font-family="Schibsted Grotesk,Arial,sans-serif" fill="currentColor"><tspan font-weight="800">Wrapped</tspan><tspan font-weight="300"> 2026</tspan></text></svg>
+  <svg class="bigmark tall" role="img" aria-label="PUBLIC Wrapped 2026"><rect fill="none" stroke="currentColor"/><text class="m-pub" font-family="Poppins,Arial,sans-serif" font-weight="600" fill="currentColor">PUBLIC</text><text class="m-wr" font-family="Schibsted Grotesk,Arial,sans-serif" fill="currentColor"><tspan font-weight="800">Wrapped</tspan><tspan font-weight="300"> 2026</tspan></text></svg>
 </footer>
 
 <div class="whoM" id="whoM" role="dialog" aria-modal="true" aria-labelledby="whoT">
@@ -779,7 +799,6 @@ function renderFigs(){
   const m=countBy(picks,p=>p.medium).slice(0,3);
   const cells=[[picks.length,picks.length===1?'work':'works'],...m.map(([k,v])=>[v,medLabel(k,v)]),[people(),people()===1?'person':'people']];
   $('figs').innerHTML=cells.map(([n,l])=>`<div><b>${n}</b><span>${esc(l)}</span></div>`).join('');
-  $('count').textContent=picks.length+' picks so far';
 }
 function renderFilters(){
   const opts=[['All',picks.length],...countBy(picks,p=>p.medium)];
@@ -858,7 +877,7 @@ function renderShop(rows){
     }else if(g.k==='other'){
       rack=g.items.map(o=>`<button type="button" class="fo${o.i===sel?' up':''}" data-up="${o.i}" aria-label="${lab(o)}">${cover(o.p)}</button>`).join('');
     }else{
-      rack=g.items.map(o=>{const L=spineLook(o.p,g.k);return `<button type="button" class="sp${o.i===sel?' up':''}" data-up="${o.i}" aria-label="${lab(o)}" style="--w:${L.w}px;--h:${L.h}px;--c:${L.c[0]};--t:${L.c[1]}${L.band?';--bd:var(--sig)':''}"><span class="face">${g.k==='film'?`<span class="n">${String(o.i+1).padStart(3,'0')}</span>`:''}<span class="t">${esc(o.p.title)}</span>${g.k==='book'&&o.p.by?`<span class="a">${esc(o.p.by)}</span>`:''}${g.k==='film'?'<span class="b">PUBLIC</span>':''}</span></button>`;}).join('')
+      rack=g.items.map(o=>{const L=spineLook(o.p,g.k);return `<button type="button" class="sp${g.k==='book'?' bk':''}${o.i===sel?' up':''}" data-up="${o.i}" aria-label="${lab(o)}" style="--w:${L.w}px;--h:${L.h}px;--d:${Math.round(L.h*.2)}px;--c:${L.c[0]};--t:${L.c[1]}${L.band?';--bd:var(--sig)':''}"><span class="face">${g.k==='film'?`<span class="n">${String(o.i+1).padStart(3,'0')}</span>`:''}<span class="t">${esc(o.p.title)}</span>${g.k==='book'&&o.p.by?`<span class="a">${esc(o.p.by)}</span>`:''}${g.k==='film'?'<span class="b">PUBLIC</span>':''}</span></button>`;}).join('')
         +`<a class="sp ghost" href="#add" style="--gh:${g.k==='film'?256:220}px" aria-label="Add yours to this shelf"><span class="face"><span class="t">Yours here</span></span></a>`;
     }
     if(g.k!=='other')rack+=`<div class="display" aria-hidden="true">${shopArt(sel)}</div>`;
@@ -1218,6 +1237,21 @@ window.addEventListener('pagehide',()=>{if(playing)stop();});
 hooks.push(refresh);
 }
 
+
+/* footer wordmark: measure the real text, box PUBLIC like the logo, then scale the whole thing to the page width */
+function fitMarks(){document.querySelectorAll('.bigmark').forEach(svg=>{
+  if(!svg.getBoundingClientRect().width)return;
+  const pub=svg.querySelector('.m-pub'),wr=svg.querySelector('.m-wr'),rc=svg.querySelector('rect'),fs=100,tall=svg.classList.contains('tall');
+  pub.setAttribute('font-size',fs);pub.setAttribute('x',0);pub.setAttribute('y',0);pub.style.letterSpacing=(.12*fs)+'px';
+  const pb=pub.getBBox(),cap=.7*fs,px=.36*fs,py=.3*fs,sw=.075*fs;
+  const rx=pb.x-px+.06*fs,ry=-cap-py,rw=pb.width+2*px-.12*fs,rh=cap+2*py;
+  [['x',rx],['y',ry],['width',rw],['height',rh],['stroke-width',sw]].forEach(([k,v])=>rc.setAttribute(k,v));
+  let f2=rh/.72;wr.setAttribute('font-size',f2);wr.style.letterSpacing=(-.035*f2)+'px';wr.setAttribute('x',0);wr.setAttribute('y',0);
+  if(tall){const wb=wr.getBBox();f2*=(rw+sw)/wb.width;wr.setAttribute('font-size',f2);wr.style.letterSpacing=(-.035*f2)+'px';const b2=wr.getBBox();wr.setAttribute('x',rx-sw/2-b2.x);wr.setAttribute('y',ry+rh+.2*rh+.72*f2);}
+  else{wr.setAttribute('x',rx+rw+.22*rh);wr.setAttribute('y',ry+rh-sw/2);}
+  const a=svg.getBBox();svg.setAttribute('viewBox',[a.x-sw/2,a.y-sw/2,a.width+sw,a.height+sw].map(v=>v.toFixed(1)).join(' '));
+});}
+fitMarks();document.fonts?.ready.then(fitMarks);addEventListener('resize',fitMarks);
 const saved=store.get();
 me=saved&&saved!=='-'?saved:null;
 if(me)$('f-name').value=me;
