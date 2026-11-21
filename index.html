@@ -248,7 +248,7 @@ h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;tex
 .crowd{position:absolute;inset:0;width:100%;height:100%;background:var(--bg);opacity:0;transition:opacity .35s;pointer-events:none}
 .crowd .halo{fill:var(--bg);stroke:var(--bg);stroke-linejoin:round}
 .crowd .ink{fill:var(--sig);stroke:var(--sig);stroke-width:.6;stroke-linejoin:round}
-.crowd .pp{opacity:0;transform:translateY(3px);transform-box:fill-box;transition:opacity .3s,transform .4s cubic-bezier(.2,.7,.2,1)}
+.crowd .pp{opacity:0;transform:translateY(3px);transform-box:fill-box;transition:opacity .38s,transform .5s cubic-bezier(.2,.7,.2,1)}
 [data-accent=all] .crowd .p1{--sig:var(--c1)}[data-accent=all] .crowd .p2{--sig:var(--c2)}[data-accent=all] .crowd .p3{--sig:var(--c3)}[data-accent=all] .crowd .p4{--sig:var(--c4)}
 .pic.drawn .crowd,.pic:focus-visible .crowd{opacity:1}
 .pic.drawn .pp,.pic:focus-visible .pp{opacity:1;transform:none;transition-delay:var(--d)}
@@ -1572,7 +1572,7 @@ function draw(){
   }
   const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('class','crowd');svg.setAttribute('aria-hidden','true');
   svg.innerHTML=`<defs><filter id="ink" color-interpolation-filters="sRGB" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="${Math.max(1,h*.012).toFixed(1)}"/></filter></defs><g filter="url(#ink)">`+
-    out.map(o=>`<g class="pp p${o.n%4+1}" style="--d:${(o.d*.45).toFixed(2)}s"><ellipse class="halo" cx="${f2(o.S.mass[0])}" cy="${f2(o.S.mass[1])}" rx="${f2(o.S.mass[2])}" ry="${f2(o.S.mass[3])}"/><ellipse class="halo" cx="${f2(o.S.disc[0])}" cy="${f2(o.S.disc[1])}" rx="${f2(o.S.disc[2])}" ry="${f2(o.S.disc[3])}"/><path class="halo" d="${o.S.join('')}" stroke-width="${f2(Math.max(3,h*.05))}"/><path class="ink" d="${o.S.join('')}"/></g>`).join('')+'</g>';
+    out.map(o=>`<g class="pp p${o.n%4+1}" style="--d:${(o.d*.56).toFixed(2)}s"><ellipse class="halo" cx="${f2(o.S.mass[0])}" cy="${f2(o.S.mass[1])}" rx="${f2(o.S.mass[2])}" ry="${f2(o.S.mass[3])}"/><ellipse class="halo" cx="${f2(o.S.disc[0])}" cy="${f2(o.S.disc[1])}" rx="${f2(o.S.disc[2])}" ry="${f2(o.S.disc[3])}"/><path class="halo" d="${o.S.join('')}" stroke-width="${f2(Math.max(3,h*.05))}"/><path class="ink" d="${o.S.join('')}"/></g>`).join('')+'</g>';
   const old=pic.querySelector('.crowd');old?old.replaceWith(svg):pic.appendChild(svg);
 }
 let raf=0;new ResizeObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(draw);}).observe(pic);
