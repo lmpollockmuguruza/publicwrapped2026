@@ -1468,7 +1468,7 @@ function brush(pts,w,r){
 /* one person, feet at (x,y), h tall when standing; crouching in the front row; arms set by where they stand */
 function person(P,x,y,h,crouch,arms,sp){
   const r=rng(P.seed),W=Math.max(1.5,h*.021),S=[],add=(pts,k=1)=>S.push(brush(pts.map(q=>[x+q[0],y+q[1]]),W*k,r));
-  const up=crouch?h*.26:0,hr=h*.095,hy=-h+hr*1.1+up,sh=hy+hr*1.15+h*.07,hip=-h*.46+up,lean=rr(r,-.025,.025)*h;
+  const up=crouch?h*.43:0,hr=h*.095,hy=-h+hr*1.1+up,sh=hy+hr*1.15+h*.07,hip=-h*.46+up,lean=rr(r,-.025,.025)*h;
   const a0=rr(r,0,360),hry=hr*rr(r,1.02,1.1),hx=lean*.5,R=hr*1.12;
   S.disc=[x+hx,y+hy,hr,hry];S.mass=[x+lean*.25,y+(hy+hr)/2,h*(crouch?.17:.13),(-hy-hr)/2];
   /* head: one loop that doesn't quite close, and a small smile for the camera */
@@ -1497,7 +1497,8 @@ function person(P,x,y,h,crouch,arms,sp){
   /* legs: standing, or crouched with knees up */
   const knees=[];
   for(const s of[-1,1]){
-    if(crouch){const kn=[s*h*rr(r,.14,.17),hip-h*rr(r,.05,.08)],ft=[s*h*rr(r,.07,.1),0];knees.push(kn);add(join(bez(hp,[hp[0]+s*h*.05,hp[1]-h*.02],[kn[0]-s*h*.05,kn[1]-h*.02],kn,10),bez(kn,[kn[0]+s*h*.03,kn[1]+h*.06],[ft[0]+s*h*.02,-h*.05],ft,10),bez(ft,[ft[0]+s*h*.02,0],[ft[0]+s*h*.04,0],[ft[0]+s*h*.06,0],4)),.95);}
+    if(crouch)continue;
+    if(false){const kn=[s*h*rr(r,.14,.17),hip-h*rr(r,.05,.08)],ft=[s*h*rr(r,.07,.1),0];knees.push(kn);add(join(bez(hp,[hp[0]+s*h*.05,hp[1]-h*.02],[kn[0]-s*h*.05,kn[1]-h*.02],kn,10),bez(kn,[kn[0]+s*h*.03,kn[1]+h*.06],[ft[0]+s*h*.02,-h*.05],ft,10),bez(ft,[ft[0]+s*h*.02,0],[ft[0]+s*h*.04,0],[ft[0]+s*h*.06,0],4)),.95);}
     else{const top=P.dress?[s*h*.06,-h*.27]:hp,ft=[s*h*rr(r,.07,.11),0];add(join(bez(top,[top[0]+s*h*.02,top[1]+h*.15],[ft[0]-s*h*.01,-h*.15],ft,16),bez(ft,[ft[0]+s*h*.02,ft[1]+h*.005],[ft[0]+s*h*.04,0],[ft[0]+s*h*.06,0],4)));}
   }
   /* arms */
@@ -1506,47 +1507,58 @@ function person(P,x,y,h,crouch,arms,sp){
     if(a==='hug'){const re=sp*rr(r,.85,1);pts=bez(shp,[shp[0]+s*re*.3,shp[1]-h*.05],[shp[0]+s*re*.7,shp[1]-h*.05],[shp[0]+s*re,shp[1]+h*.015],16);}
     else if(a==='wave')pts=join(bez(shp,[shp[0]+s*h*.12,shp[1]-h*.02],[shp[0]+s*h*.22,shp[1]-h*.08],[shp[0]+s*h*.2,shp[1]-h*.2],12),bez([shp[0]+s*h*.2,shp[1]-h*.2],[shp[0]+s*h*.2,shp[1]-h*.26],[shp[0]+s*h*.22,shp[1]-h*.3],[shp[0]+s*h*.26,shp[1]-h*.34],8));
     else if(a==='hip'){const el=[shp[0]+s*h*.17,shp[1]+h*.12];pts=join(bez(shp,[shp[0]+s*h*.08,shp[1]+h*.02],[el[0]-s*h*.02,el[1]-h*.06],el,10),bez(el,[el[0]+s*h*.01,el[1]+h*.05],[hp[0]+s*h*.1,hp[1]-h*.02],[hp[0]+s*h*.04,hp[1]],8));}
-    else if(a==='knee'){const kn=knees[k];pts=bez(shp,[shp[0]+s*h*.06,shp[1]+h*.06],[kn[0],kn[1]-h*.1],[kn[0]+s*h*.01,kn[1]-h*.01],14);}
+    else if(a==='lap'){const el=[shp[0]+s*h*.14,hip-h*.1];pts=join(bez(shp,[shp[0]+s*h*.07,shp[1]+h*.03],[el[0],el[1]-h*.07],el,10),bez(el,[el[0],el[1]+h*.05],[s*h*.08,hip-h*.02],[s*h*.02,hip-h*.03],10));}
     else pts=bez(shp,[shp[0]+s*h*.06,shp[1]+h*.08],[shp[0]+s*h*.12,shp[1]+A*.6],[shp[0]+s*h*rr(r,.1,.14),shp[1]+A],14);
     add(pts,.95);});
   return S;
 }
-/* the office dog, sitting in the front row, facing the camera's left */
-function dog(x,y,d,r){
-  const W=Math.max(1.4,d*.05),S=[],add=(pts,k=1)=>S.push(brush(pts.map(q=>[x+q[0],y+q[1]]),W*k,r));
-  add(arc(d*.12,-d*.78,d*.17,d*.15,0,355,24));
-  add(bez([d*.02,-d*.92],[-d*.12,-d*.9],[-d*.12,-d*.72],[-d*.06,-d*.6],10),.9);
-  add(bez([d*.27,-d*.76],[d*.36,-d*.75],[d*.4,-d*.7],[d*.34,-d*.66],6),.8);
-  add(join(bez([-d*.02,-d*.64],[-d*.22,-d*.52],[-d*.34,-d*.2],[-d*.26,0],14),bez([-d*.26,0],[-d*.1,d*.01],[d*.05,0],[d*.16,0],8)),.95);
-  add(bez([d*.16,-d*.63],[d*.14,-d*.4],[d*.14,-d*.2],[d*.16,0],10),.9);
-  add(bez([-d*.28,-d*.06],[-d*.45,-d*.08],[-d*.52,-d*.22],[-d*.44,-d*.32],10),.75);
-  S.disc=[x+d*.12,y-d*.78,d*.17,d*.15];S.mass=[x-d*.06,y-d*.3,d*.24,d*.32];return S;
+/* the office dogs, sitting in the front row. curly coats are drawn as one scalloped line */
+const curl=(pts,amp,n)=>pts.map((q,i)=>{const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1,k=amp*Math.abs(Math.sin(i/(pts.length-1)*Math.PI*n));return [q[0]-dy/l*k,q[1]+dx/l*k];});
+function dog(x,y,d,r,o){
+  const W=o.w,S=[],c=o.curly,add=(pts,k=1)=>S.push(brush(pts.map(q=>[x+q[0],y+q[1]]),W*k,r)),fur=(pts,n)=>c?curl(pts,d*.04,n):pts;
+  const hx=d*.12,hy=-d*.78,hr=d*(c?.19:.16);
+  /* head */
+  add(c?arc(hx,hy,hr,hr*.95,0,360,60,t=>1+Math.abs(Math.sin(t*Math.PI*10))*.14):arc(hx,hy,hr,hr*.92,0,355,24));
+  /* ears: floppy, pointed, or a curly drop */
+  if(o.ears==='point'){add(join(bez([hx-hr*.7,hy-hr*.5],[hx-hr*.8,hy-hr*1.2],[hx-hr*.6,hy-hr*1.6],[hx-hr*.45,hy-hr*1.75],6),bez([hx-hr*.45,hy-hr*1.75],[hx-hr*.3,hy-hr*1.4],[hx-hr*.15,hy-hr*1.1],[hx-hr*.05,hy-hr*.95],6)),.8);}
+  else add(fur(join(bez([hx-hr*.2,hy-hr*.95],[hx-hr*1.1,hy-hr*.9],[hx-hr*1.35,hy-hr*.1],[hx-hr*1.15,hy+hr*.8],12),bez([hx-hr*1.15,hy+hr*.8],[hx-hr*1.05,hy+hr*1.1],[hx-hr*.7,hy+hr*1],[hx-hr*.65,hy+hr*.5],8)),3),.9);
+  add(arc(hx+hr*.3,hy-hr*.2,hr*.09,hr*.09,0,340,8),.7);
+  /* snout and nose */
+  const sn=o.snout||1,mx=hx+hr*(1.45+.35*sn);add(join(bez([hx+hr*.75,hy-hr*.3],[hx+hr*1.1,hy-hr*.22],[mx-hr*.3,hy-hr*.12],[mx,hy-hr*.05],8),bez([mx,hy-hr*.05],[mx+hr*.12,hy+hr*.15],[mx+hr*.05,hy+hr*.4],[mx-hr*.1,hy+hr*.45],6),bez([mx-hr*.1,hy+hr*.45],[mx-hr*.5,hy+hr*.5],[hx+hr*1,hy+hr*.6],[hx+hr*.7,hy+hr*.7],8)),.85);
+  add(arc(mx-hr*.02,hy+hr*.02,hr*.13,hr*.11,0,350,10),1.2);
+  /* back, seat and front leg */
+  add(join(fur(bez([hx-hr*.5,hy+hr*.85],[-d*.22,-d*.52],[-d*.36,-d*.2],[-d*.27,0],16),4),bez([-d*.27,0],[-d*.1,d*.01],[d*.05,0],[d*.17,0],8)),.95);
+  add(fur(bez([hx+hr*.3,hy+hr*.95],[d*.15,-d*.4],[d*.14,-d*.2],[d*.17,0],12),3),.9);
+  add(bez([d*.06,-d*.38],[d*.05,-d*.25],[d*.05,-d*.12],[d*.07,0],8),.8);
+  /* tail */
+  add(c?arc(-d*.38,-d*.18,d*.07,d*.07,0,350,16,t=>1+Math.abs(Math.sin(t*Math.PI*5))*.2):bez([-d*.29,-d*.06],[-d*.45,-d*.08],[-d*.52,-d*.22],[-d*.44,-d*.32],10),.75);
+  S.disc=[x+hx,y+hy,hr,hr*.92];S.mass=[x-d*.06,y-d*.3,d*.26,d*.32];return S;
 }
 let last='';
 function draw(){
   const b=pic.getBoundingClientRect(),W=Math.round(b.width),H=Math.round(b.height);if(!W||!H)return;
   const key=W+'x'+H;if(key===last)return;last=key;
-  /* a posed group: standing rows at the back, one crouching row in front (with the dog). pick the row count that makes us largest */
+  /* a posed group: standing rows at the back, a low front row (cut by the frame, as if crouching) with the four dogs. pick the row count that makes us largest */
   let best=null;
   for(let rows=3;rows<=6;rows++){
-    const front=Math.round(50/rows*.85)+1,rest=50-(front-1),counts=[];let left=rest;
+    const front=Math.round(50/rows*.85)+4,rest=50-(front-4),counts=[];let left=rest;
     for(let k=0;k<rows-1;k++){const c=Math.round(left/(rows-1-k));counts.push(c);left-=c;}
     counts.push(front);
-    const hv=H*.9/(1.1+.12+(rows-2)*.3),hw=Math.min(...counts.map((c,k)=>W*.96/(c*(k===rows-1?.36:.3))));
+    const hv=H*.9/(1.1+.12+(rows-2)*.3),hw=Math.min(...counts.map((c,k)=>W*.96/(c*(k===rows-1?.34:.3))));
     const h=Math.min(hv,hw);if(!best||h>best.h)best={rows,counts,h};
   }
   const {rows,counts,h}=best,R1=rng(7),out=[];let i=0,idx=0;
   const B0=H*.965,top=B0-(h*1.1+.12*h+(rows-2)*.3*h),lift=Math.max(0,(top-H*.04)*.35);
   for(let k=0;k<rows;k++){
-    const crouch=k===rows-1,c=counts[k],depth=rows-1-k,sc=1-.035*depth,sp=Math.min(W*.96/c,h*(crouch?.42:.34)),x0=W/2-sp*(c-1)/2+(depth%2?sp*.25:0);
+    const crouch=k===rows-1,c=counts[k],depth=rows-1-k,sc=1-.035*depth,sp=Math.min(W*.96/c,h*(crouch?.38:.34)),x0=W/2-sp*(c-1)/2+(depth%2?sp*.25:0);
     const base=B0-lift*(crouch?0:1)-(crouch?0:.12*h+(depth-1)*.3*h);
-    const mid=Math.floor(c/2),waver=crouch?-1:Math.floor(R1()*c);
+    const dogAt=crouch?[.14,.42,.62,.88].map(f=>Math.round(f*(c-1))):[],DOGS=[{d:.44,curly:1,ears:'drop'},{d:.3,ears:'drop'},{d:.42,ears:'drop'},{d:.56,ears:'drop',snout:1.6}],waver=crouch?-1:Math.floor(R1()*c);let dn=0;
     for(let j=0;j<c;j++){
       const x=x0+sp*j+rr(R1,-.06,.06)*sp,u=(x-W/2)/(W/2),y=base+u*u*h*.05+rr(R1,-.015,.015)*h;
-      if(crouch&&j===mid){out.push({S:dog(x,y,h*.46,rng(11)),n:idx++,d:R1()});continue;}
-      const P=ppl[i++],arms=[-1,1].map(s=>{const edge=(s<0&&j===0)||(s>0&&j===c-1)||(crouch&&(j+s===mid));
+      if(dogAt.includes(j)){const D=DOGS[dn++];out.push({S:dog(x,y,h*D.d,rng(11+dn),{...D,w:Math.max(1.5,h*.021)}),n:idx++,d:R1()});continue;}
+      const P=ppl[i++],arms=[-1,1].map(s=>{const edge=(s<0&&j===0)||(s>0&&j===c-1)||(crouch&&dogAt.includes(j+s));
         if(!crouch&&j===waver&&s>0&&!edge)return 'wave';
-        if(crouch)return !edge&&R1()<.3?'hug':'knee';
+        if(crouch)return !edge&&R1()<.3?'hug':'lap';
         return edge?(R1()<.5?'hip':'down'):(R1()<.75?'hug':R1()<.5?'down':'hip');});
       out.push({S:person(P,x,y,h*sc*P.s,crouch,arms,sp),n:idx++,d:R1()});
     }
