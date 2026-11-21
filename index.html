@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>{let t=null;try{t=localStorage.getItem('pw26-theme');}catch(e){}document.documentElement.dataset.theme=t==='light'?'light':'dark';let a=null;try{a=localStorage.getItem('pw26-accent');}catch(e){}if(/^(pink|yellow|peach|blue|all)$/.test(a||''))document.documentElement.dataset.accent=a;}</script>
+<script>{let t=null;try{t=localStorage.getItem('pw26-theme');}catch(e){}document.documentElement.dataset.theme=t==='light'?'light':'dark';let a=null;try{a=localStorage.getItem('pw26-accent');}catch(e){}if(a===null)a='all';if(/^(pink|yellow|peach|blue|all)$/.test(a||''))document.documentElement.dataset.accent=a;}</script>
 <title>PUBLIC Wrapped 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -244,6 +244,16 @@ h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;tex
 .photo{margin:0;padding-top:clamp(8px,2vw,20px)}
 #photo{padding-bottom:clamp(48px,7vw,96px)}
 .photo img{display:block;width:100%;aspect-ratio:21/8;object-fit:cover;filter:grayscale(1) contrast(1.08);background:var(--soft)}
+.photo .pic{position:relative;outline-offset:4px}
+.crowd{position:absolute;inset:0;width:100%;height:100%;background:var(--bg);opacity:0;transition:opacity .35s;pointer-events:none}
+.crowd .halo{fill:var(--bg);stroke:var(--bg);stroke-linejoin:round}
+.crowd .ink{fill:var(--sig);stroke:var(--sig);stroke-width:.6;stroke-linejoin:round}
+.crowd .pp{opacity:0;transform:translateY(3px);transform-box:fill-box;transition:opacity .3s,transform .4s cubic-bezier(.2,.7,.2,1)}
+[data-accent=all] .crowd .p1{--sig:var(--c1)}[data-accent=all] .crowd .p2{--sig:var(--c2)}[data-accent=all] .crowd .p3{--sig:var(--c3)}[data-accent=all] .crowd .p4{--sig:var(--c4)}
+.pic.drawn .crowd,.pic:focus-visible .crowd{opacity:1}
+.pic.drawn .pp,.pic:focus-visible .pp{opacity:1;transform:none;transition-delay:var(--d)}
+@media(hover:hover){.pic:hover .crowd{opacity:1}.pic:hover .pp{opacity:1;transform:none;transition-delay:var(--d)}}
+@media(prefers-reduced-motion:reduce){.crowd,.crowd .pp{transition:none!important}}
 .photo figcaption{display:flex;justify-content:space-between;gap:12px;padding:10px 0 0;font-size:14px;color:var(--mute)}
 .empty{padding:40px 0;color:var(--mute);border-top:1px solid var(--rule)}
 .pl{border-top:2px solid var(--rule)}
@@ -373,6 +383,13 @@ footer .made{margin:0 0 clamp(14px,2vw,22px);display:flex;justify-content:space-
 .i-welcome .stay b{font-weight:800}
 @keyframes flash{0%{opacity:0;transform:translateY(12px)}25%{opacity:1;transform:none}72%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-8px)}}
 .i-welcome .logo{font-size:.62em!important;padding:.32em .3em .26em .42em;border-width:.07em;display:inline-block}
+/* multicolour: the wordmark lands white, then takes the footer's colours one chunk at a time */
+@keyframes tint{to{color:var(--to)}}
+@keyframes tintBox{to{border-color:var(--c4)}}
+[data-accent=all] .i-welcome .stay .logo{border-color:var(--ink);--to:var(--c1);animation:tint 1s ease 6.3s forwards,tintBox 1s ease 6.8s forwards}
+[data-accent=all] .i-welcome .ch-yr{--to:var(--c3);animation:tint 1s ease 7.3s forwards}
+[data-accent=all] .i-welcome .ch-wr{--to:var(--c2);animation:tint 1s ease 7.8s forwards}
+@media(prefers-reduced-motion:reduce){[data-accent=all] .i-welcome .stay .logo{animation:none;color:var(--c1);border-color:var(--c4)}[data-accent=all] .i-welcome .ch-yr{animation:none;color:var(--c3)}[data-accent=all] .i-welcome .ch-wr{animation:none;color:var(--c2)}}
 .intro.bare .i-stage{align-items:stretch}
 .i-type{max-width:22ch}
 .i-type #iTyped{display:inline;opacity:1;animation:none;white-space:pre-wrap}
@@ -430,8 +447,8 @@ html{scroll-padding-top:96px}
 .top{position:relative}
 body.nav-away .top .in{position:fixed;top:14px;left:50%;z-index:6;width:min(460px,calc(100vw - 32px));max-width:none;flex-wrap:nowrap;min-height:58px;padding:8px 8px 8px 18px;background:var(--bg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 10px 30px -12px color-mix(in srgb,#000 40%,transparent);opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,-14px);transition:opacity .25s,transform .3s cubic-bezier(.2,.7,.2,1),visibility 0s .3s}
 body.nav-pill .top .in{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0);transition:opacity .25s,transform .3s cubic-bezier(.2,.7,.2,1)}
-body.nav-away .mark{gap:10px;font-size:16px}
-body.nav-away .logo{font-size:13px!important;padding:5px 6px 4px 8px}
+body.nav-away .top .mark{gap:10px;font-size:16px}
+body.nav-away .top .logo{font-size:13px!important;padding:5px 6px 4px 8px}
 body.nav-away .menuBtn{display:inline-flex}
 body.nav-away nav{position:absolute;top:calc(100% + 8px);left:0;right:0;flex-direction:column;flex-wrap:nowrap;gap:0;padding:18px 20px 22px;background:var(--bg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 18px 40px -16px color-mix(in srgb,#000 45%,transparent);max-height:calc(100vh - 110px);overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .2s,transform .25s cubic-bezier(.2,.7,.2,1),visibility 0s .25s}
 body.nav-away.menu nav{opacity:1;visibility:visible;transform:none;transition:opacity .2s,transform .25s cubic-bezier(.2,.7,.2,1)}
@@ -448,7 +465,8 @@ body.nav-away nav .accent{margin-top:14px;align-self:stretch}
 body.nav-away nav .acBtn{display:none}
 body.nav-away nav .acPop{display:flex;position:static;flex-direction:row;flex-wrap:wrap;gap:6px;border:0;background:none;min-width:0}
 body.nav-away nav .acPop button{width:auto;min-height:36px;padding:0 12px 0 8px;border:1px solid var(--rule);border-radius:999px;font-size:14px;gap:8px;font-weight:400;letter-spacing:0}
-body.nav-away .scrim{display:block;position:fixed;inset:0;z-index:11;background:color-mix(in srgb,#000 35%,transparent);opacity:0;pointer-events:none;transition:opacity .25s}
+body.nav-away .scrim{display:block;position:fixed;inset:0;z-index:11;background:color-mix(in srgb,#000 30%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s}
+body.nav-snap .top .in,body.nav-snap nav{transition:none!important}
 body.nav-away.menu .scrim{opacity:1;pointer-events:auto}
 body.nav-away .top{z-index:15}
 }
@@ -618,7 +636,7 @@ body{transition:background-color .3s,color .3s}
       <div class="lede">
         <div>
           <p class="ezgi">“The more AI &amp; tech I use, the more I find myself going to art &amp; human creativity to… reorient.”</p>
-          <p class="ezgi-by">Ezgi, who started this.</p>
+          <p class="ezgi-by">Ezgi</p>
         </div>
         <div class="side">
           <p class="note">Entries marked <span class="fake">made-up example</span> are fake, just to show how it works.<br>Submissions close 10 December · reveal 17 December</p>
@@ -634,8 +652,8 @@ body{transition:background-color .3s,color .3s}
 
   <section class="band" id="photo">
     <figure class="photo in">
-      <img src="public.png" alt="The PUBLIC office" onerror="this.closest('section').remove()">
-      <figcaption><span>PUBLIC, Embankment</span><span>2026</span></figcaption>
+      <div class="pic" tabindex="0" aria-label="The PUBLIC team. Hover, tap or press Enter to see all 50 of us drawn by hand."><img src="public.png" alt="The PUBLIC team" onerror="this.closest('section').remove()"></div>
+      <figcaption><span>PUBLIC</span><span>2026</span></figcaption>
     </figure>
   </section>
 
@@ -900,7 +918,7 @@ function navScroll(){
   const b=document.body;
   if(!wide.matches){if(b.classList.contains('nav-away')){b.classList.remove('nav-away','nav-pill');topEl.style.height='';}return;}
   const h=topEl.offsetHeight,y=scrollY;
-  if(y>h&&!b.classList.contains('nav-away')){topEl.style.height=h+'px';b.classList.add('nav-away');}
+  if(y>h&&!b.classList.contains('nav-away')){topEl.style.height=h+'px';b.classList.add('nav-away','nav-snap');topEl.offsetWidth;b.classList.remove('nav-snap');}
   else if(y<=h&&b.classList.contains('nav-away')){setMenu(false);b.classList.remove('nav-away','nav-pill');topEl.style.height='';}
   const pill=y>h+220;
   if(!pill&&b.classList.contains('nav-pill'))setMenu(false);
@@ -1427,6 +1445,141 @@ $('sndT').addEventListener('click',e=>{e.stopPropagation();stop();});
 }
 
 
+/* the photo's other side: all 50 of us, drawn by hand (brush strokes generated once, from a fixed seed, so it is always the same people) */
+(function(){
+const pic=document.querySelector('.photo .pic');if(!pic)return;
+const NS='http://www.w3.org/2000/svg';
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const R0=rng(2026),pick=(r,a)=>a[Math.floor(r()*a.length)],rr=(r,a,b)=>a+(b-a)*r();
+/* the people: 20 men, 30 women, shuffled; traits fixed once */
+const HM=['short','short','spiky','curly','bald','quiff','short','long','side'],HW=['long','long','wavy','bob','bun','pony','curly','long','short','bob','pony','wavy'];
+let ppl=[];for(let i=0;i<50;i++){const m=i<20;ppl.push({m,hair:pick(R0,m?HM:HW),beard:m&&R0()<.3,glasses:R0()<.08,dress:!m&&R0()<.4,s:m?rr(R0,.95,1.1):rr(R0,.86,1.03),seed:Math.floor(R0()*1e9)});}
+for(let i=ppl.length-1;i>0;i--){const j=Math.floor(R0()*(i+1));[ppl[i],ppl[j]]=[ppl[j],ppl[i]];}
+/* geometry helpers */
+const bez=(p0,p1,p2,p3,n=22)=>{const o=[];for(let i=0;i<=n;i++){const t=i/n,u=1-t;o.push([u*u*u*p0[0]+3*u*u*t*p1[0]+3*u*t*t*p2[0]+t*t*t*p3[0],u*u*u*p0[1]+3*u*u*t*p1[1]+3*u*t*t*p2[1]+t*t*t*p3[1]]);}return o;};
+const arc=(cx,cy,rx,ry,a0,a1,n=28,f)=>{const o=[];for(let i=0;i<=n;i++){const a=(a0+(a1-a0)*i/n)*Math.PI/180,k=f?f(i/n):1;o.push([cx+Math.cos(a)*rx*k,cy+Math.sin(a)*ry*k]);}return o;};
+const join=(...a)=>a.reduce((o,p)=>o.concat(o.length?p.slice(1):p),[]);
+const f2=v=>Math.round(v*10)/10;
+/* one brush stroke: a filled outline, full in the middle, lifting off at the ends, with a little hand tremor */
+function brush(pts,w,r){
+  const n=pts.length,ph=r()*6.3,amp=w*.18,L=[],Rt=[];
+  const p=pts.map((q,i)=>{const t=i/(n-1);return [q[0]+Math.sin(t*7+ph)*amp*.6,q[1]+Math.cos(t*5+ph)*amp*.6];});
+  const start=rr(r,.35,.55),end=rr(r,.15,.35);
+  for(let i=0;i<n;i++){
+    const a=p[Math.max(0,i-1)],b=p[Math.min(n-1,i+1)],dx=b[0]-a[0],dy=b[1]-a[1],d=Math.hypot(dx,dy)||1,nx=-dy/d,ny=dx/d,t=i/(n-1);
+    const prof=t<.5?start+(1-start)*Math.sin(t*Math.PI):end+(1-end)*Math.sin(t*Math.PI),hw=w/2*prof*(1+Math.sin(t*11+ph)*.08);
+    L.push([p[i][0]+nx*hw,p[i][1]+ny*hw]);Rt.push([p[i][0]-nx*hw,p[i][1]-ny*hw]);
+  }
+  const o=L.concat(Rt.reverse());return 'M'+o.map(q=>f2(q[0])+' '+f2(q[1])).join('L')+'Z';
+}
+/* one person, feet at (x,y), h tall when standing; crouching in the front row; arms set by where they stand */
+function person(P,x,y,h,crouch,arms,sp){
+  const r=rng(P.seed),W=Math.max(1.5,h*.021),S=[],add=(pts,k=1)=>S.push(brush(pts.map(q=>[x+q[0],y+q[1]]),W*k,r));
+  const up=crouch?h*.43:0,hr=h*.095,hy=-h+hr*1.1+up,sh=hy+hr*1.15+h*.07,hip=-h*.46+up,lean=rr(r,-.025,.025)*h;
+  const a0=rr(r,0,360),hry=hr*rr(r,1.02,1.1),hx=lean*.5,R=hr*1.12;
+  S.disc=[x+hx,y+hy,hr,hry];S.mass=[x+lean*.25,y+(hy+hr)/2,h*(crouch?.17:.13),(-hy-hr)/2];
+  /* head: one loop that doesn't quite close, and a small smile for the camera */
+  add(arc(hx,hy,hr,hry,a0,a0+rr(r,345,372),34,t=>1+Math.sin(t*9)*.03),1);
+  add(arc(hx+rr(r,-.06,.06)*hr,hy+hr*.1,hr*.42,hr*.36,rr(r,25,40),rr(r,140,155),10),.5);
+  const hair={
+    long:()=>add(join(bez([hx-R*1.1,hy+hr*2],[hx-R*1.15,hy+hr*1.2],[hx-R*1.1,hy+hr*.4],[hx-R,hy]),arc(hx,hy,R,R*1.04,180,360,26),bez([hx+R,hy],[hx+R*1.1,hy+hr*.4],[hx+R*1.15,hy+hr*1.2],[hx+R*1.1,hy+hr*2]))),
+    wavy:()=>add(join(arc(hx,hy,R,R*1.04,180,360,26),bez([hx+R,hy],[hx+R*1.4,hy+hr*.7],[hx+R*.8,hy+hr*1.4],[hx+R*1.3,hy+hr*2.2]))),
+    bob:()=>add(join(bez([hx-R*1.25,hy+hr*.95],[hx-R*1.05,hy+hr*.9],[hx-R*1.12,hy+hr*.4],[hx-R,hy]),arc(hx,hy,R,R*1.04,180,360,26),bez([hx+R,hy],[hx+R*1.12,hy+hr*.4],[hx+R*1.05,hy+hr*.9],[hx+R*1.25,hy+hr*.95]))),
+    bun:()=>{add(arc(hx,hy,R*.98,R,200,340,18),.8);add(arc(hx+hr*.25,hy-hr*1.45,hr*.42,hr*.38,0,350,20),.9);},
+    pony:()=>{add(arc(hx,hy,R,R*1.04,190,350,22),.85);add(bez([hx+R*.85,hy-hr*.5],[hx+R*1.9,hy-hr*.6],[hx+R*1.6,hy+hr*.8],[hx+R*2.0,hy+hr*1.5]));},
+    curly:()=>add(arc(hx,hy,R*1.08,R*1.1,160,380,60,t=>1+Math.abs(Math.sin(t*Math.PI*9))*.16)),
+    short:()=>add(arc(hx,hy,R*.98,R,195,345,20),.85),
+    side:()=>add(join(arc(hx,hy,R,R,200,300,14),bez([hx+R*.2,hy-R],[hx+R*.7,hy-R*.75],[hx+R*.95,hy-R*.4],[hx+R,hy-R*.1])),.85),
+    spiky:()=>{for(let k=0;k<4;k++){const a=(230+k*27)*Math.PI/180;add([[hx+Math.cos(a)*hr*1.05,hy+Math.sin(a)*hr*1.05],[hx+Math.cos(a)*hr*1.38,hy+Math.sin(a)*hr*1.38]],.55);}},
+    quiff:()=>add(join(arc(hx,hy,R*.98,R,190,300,14),bez([hx+R*.3,hy-R*.95],[hx+R*.9,hy-R*1.5],[hx+R*1.3,hy-R*.9],[hx+R*.8,hy-R*.75])),.85),
+    bald:()=>{}
+  };
+  hair[P.hair]();
+  if(P.beard)add(arc(hx,hy,hr*1.05,hr*1.08,25,155,18),.9);
+  if(P.glasses){add(arc(hx-hr*.38,hy-hr*.12,hr*.24,hr*.2,0,355,14),.42);add(arc(hx+hr*.38,hy-hr*.12,hr*.24,hr*.2,0,355,14),.42);}
+  /* body */
+  const nk=[hx,hy+hr*1.15],hp=[lean*.2,hip];
+  add(bez(nk,[nk[0]+rr(r,-.02,.02)*h,nk[1]+h*.12],[hp[0]+rr(r,-.02,.02)*h,hp[1]-h*.1],hp,16));
+  if(P.dress&&!crouch){const wy=-h*.6;add(join(bez([lean*.2-h*.04,wy],[lean*.2-h*.08,wy+h*.12],[-h*.15,-h*.28],[-h*.17,-h*.26]),bez([-h*.17,-h*.26],[-h*.06,-h*.24],[h*.06,-h*.24],[h*.17,-h*.26]),bez([h*.17,-h*.26],[h*.15,-h*.28],[lean*.2+h*.08,wy+h*.12],[lean*.2+h*.04,wy])),.9);}
+  /* legs: standing, or crouched with knees up */
+  const knees=[];
+  for(const s of[-1,1]){
+    if(crouch)continue;
+    if(false){const kn=[s*h*rr(r,.14,.17),hip-h*rr(r,.05,.08)],ft=[s*h*rr(r,.07,.1),0];knees.push(kn);add(join(bez(hp,[hp[0]+s*h*.05,hp[1]-h*.02],[kn[0]-s*h*.05,kn[1]-h*.02],kn,10),bez(kn,[kn[0]+s*h*.03,kn[1]+h*.06],[ft[0]+s*h*.02,-h*.05],ft,10),bez(ft,[ft[0]+s*h*.02,0],[ft[0]+s*h*.04,0],[ft[0]+s*h*.06,0],4)),.95);}
+    else{const top=P.dress?[s*h*.06,-h*.27]:hp,ft=[s*h*rr(r,.07,.11),0];add(join(bez(top,[top[0]+s*h*.02,top[1]+h*.15],[ft[0]-s*h*.01,-h*.15],ft,16),bez(ft,[ft[0]+s*h*.02,ft[1]+h*.005],[ft[0]+s*h*.04,0],[ft[0]+s*h*.06,0],4)));}
+  }
+  /* arms */
+  const shp=[lean*.35,sh];
+  [-1,1].forEach((s,k)=>{const a=arms[k],A=h*.34;let pts;
+    if(a==='hug'){const re=sp*rr(r,.85,1);pts=bez(shp,[shp[0]+s*re*.3,shp[1]-h*.05],[shp[0]+s*re*.7,shp[1]-h*.05],[shp[0]+s*re,shp[1]+h*.015],16);}
+    else if(a==='wave')pts=join(bez(shp,[shp[0]+s*h*.12,shp[1]-h*.02],[shp[0]+s*h*.22,shp[1]-h*.08],[shp[0]+s*h*.2,shp[1]-h*.2],12),bez([shp[0]+s*h*.2,shp[1]-h*.2],[shp[0]+s*h*.2,shp[1]-h*.26],[shp[0]+s*h*.22,shp[1]-h*.3],[shp[0]+s*h*.26,shp[1]-h*.34],8));
+    else if(a==='hip'){const el=[shp[0]+s*h*.17,shp[1]+h*.12];pts=join(bez(shp,[shp[0]+s*h*.08,shp[1]+h*.02],[el[0]-s*h*.02,el[1]-h*.06],el,10),bez(el,[el[0]+s*h*.01,el[1]+h*.05],[hp[0]+s*h*.1,hp[1]-h*.02],[hp[0]+s*h*.04,hp[1]],8));}
+    else if(a==='lap'){const el=[shp[0]+s*h*.14,hip-h*.1];pts=join(bez(shp,[shp[0]+s*h*.07,shp[1]+h*.03],[el[0],el[1]-h*.07],el,10),bez(el,[el[0],el[1]+h*.05],[s*h*.08,hip-h*.02],[s*h*.02,hip-h*.03],10));}
+    else pts=bez(shp,[shp[0]+s*h*.06,shp[1]+h*.08],[shp[0]+s*h*.12,shp[1]+A*.6],[shp[0]+s*h*rr(r,.1,.14),shp[1]+A],14);
+    add(pts,.95);});
+  return S;
+}
+/* the office dogs, sitting in the front row. curly coats are drawn as one scalloped line */
+const curl=(pts,amp,n)=>pts.map((q,i)=>{const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],dx=b[0]-a[0],dy=b[1]-a[1],l=Math.hypot(dx,dy)||1,k=amp*Math.abs(Math.sin(i/(pts.length-1)*Math.PI*n));return [q[0]-dy/l*k,q[1]+dx/l*k];});
+function dog(x,y,d,r,o){
+  const W=o.w,S=[],c=o.curly,add=(pts,k=1)=>S.push(brush(pts.map(q=>[x+q[0],y+q[1]]),W*k,r)),fur=(pts,n)=>c?curl(pts,d*.04,n):pts;
+  const hx=d*.12,hy=-d*.78,hr=d*(c?.19:.16);
+  /* head */
+  add(c?arc(hx,hy,hr,hr*.95,0,360,60,t=>1+Math.abs(Math.sin(t*Math.PI*10))*.14):arc(hx,hy,hr,hr*.92,0,355,24));
+  /* ears: floppy, pointed, or a curly drop */
+  if(o.ears==='point'){add(join(bez([hx-hr*.7,hy-hr*.5],[hx-hr*.8,hy-hr*1.2],[hx-hr*.6,hy-hr*1.6],[hx-hr*.45,hy-hr*1.75],6),bez([hx-hr*.45,hy-hr*1.75],[hx-hr*.3,hy-hr*1.4],[hx-hr*.15,hy-hr*1.1],[hx-hr*.05,hy-hr*.95],6)),.8);}
+  else add(fur(join(bez([hx-hr*.2,hy-hr*.95],[hx-hr*1.1,hy-hr*.9],[hx-hr*1.35,hy-hr*.1],[hx-hr*1.15,hy+hr*.8],12),bez([hx-hr*1.15,hy+hr*.8],[hx-hr*1.05,hy+hr*1.1],[hx-hr*.7,hy+hr*1],[hx-hr*.65,hy+hr*.5],8)),3),.9);
+  add(arc(hx+hr*.3,hy-hr*.2,hr*.09,hr*.09,0,340,8),.7);
+  /* snout and nose */
+  const sn=o.snout||1,mx=hx+hr*(1.45+.35*sn);add(join(bez([hx+hr*.75,hy-hr*.3],[hx+hr*1.1,hy-hr*.22],[mx-hr*.3,hy-hr*.12],[mx,hy-hr*.05],8),bez([mx,hy-hr*.05],[mx+hr*.12,hy+hr*.15],[mx+hr*.05,hy+hr*.4],[mx-hr*.1,hy+hr*.45],6),bez([mx-hr*.1,hy+hr*.45],[mx-hr*.5,hy+hr*.5],[hx+hr*1,hy+hr*.6],[hx+hr*.7,hy+hr*.7],8)),.85);
+  add(arc(mx-hr*.02,hy+hr*.02,hr*.13,hr*.11,0,350,10),1.2);
+  /* back, seat and front leg */
+  add(join(fur(bez([hx-hr*.5,hy+hr*.85],[-d*.22,-d*.52],[-d*.36,-d*.2],[-d*.27,0],16),4),bez([-d*.27,0],[-d*.1,d*.01],[d*.05,0],[d*.17,0],8)),.95);
+  add(fur(bez([hx+hr*.3,hy+hr*.95],[d*.15,-d*.4],[d*.14,-d*.2],[d*.17,0],12),3),.9);
+  add(bez([d*.06,-d*.38],[d*.05,-d*.25],[d*.05,-d*.12],[d*.07,0],8),.8);
+  /* tail */
+  add(c?arc(-d*.38,-d*.18,d*.07,d*.07,0,350,16,t=>1+Math.abs(Math.sin(t*Math.PI*5))*.2):bez([-d*.29,-d*.06],[-d*.45,-d*.08],[-d*.52,-d*.22],[-d*.44,-d*.32],10),.75);
+  S.disc=[x+hx,y+hy,hr,hr*.92];S.mass=[x-d*.06,y-d*.3,d*.26,d*.32];return S;
+}
+let last='';
+function draw(){
+  const b=pic.getBoundingClientRect(),W=Math.round(b.width),H=Math.round(b.height);if(!W||!H)return;
+  const key=W+'x'+H;if(key===last)return;last=key;
+  /* a posed group: standing rows at the back, a low front row (cut by the frame, as if crouching) with the four dogs. pick the row count that makes us largest */
+  let best=null;
+  for(let rows=3;rows<=6;rows++){
+    const front=Math.round(50/rows*.85)+4,rest=50-(front-4),counts=[];let left=rest;
+    for(let k=0;k<rows-1;k++){const c=Math.round(left/(rows-1-k));counts.push(c);left-=c;}
+    counts.push(front);
+    const hv=H*.9/(1.1+.12+(rows-2)*.3),hw=Math.min(...counts.map((c,k)=>W*.96/(c*(k===rows-1?.34:.3))));
+    const h=Math.min(hv,hw);if(!best||h>best.h)best={rows,counts,h};
+  }
+  const {rows,counts,h}=best,R1=rng(7),out=[];let i=0,idx=0;
+  const B0=H*.965,top=B0-(h*1.1+.12*h+(rows-2)*.3*h),lift=Math.max(0,(top-H*.04)*.35);
+  for(let k=0;k<rows;k++){
+    const crouch=k===rows-1,c=counts[k],depth=rows-1-k,sc=1-.035*depth,sp=Math.min(W*.96/c,h*(crouch?.38:.34)),x0=W/2-sp*(c-1)/2+(depth%2?sp*.25:0);
+    const base=B0-lift*(crouch?0:1)-(crouch?0:.12*h+(depth-1)*.3*h);
+    const dogAt=crouch?[.14,.42,.62,.88].map(f=>Math.round(f*(c-1))):[],DOGS=[{d:.44,curly:1,ears:'drop'},{d:.3,ears:'drop'},{d:.42,ears:'drop'},{d:.56,ears:'drop',snout:1.6}],waver=crouch?-1:Math.floor(R1()*c);let dn=0;
+    for(let j=0;j<c;j++){
+      const x=x0+sp*j+rr(R1,-.06,.06)*sp,u=(x-W/2)/(W/2),y=base+u*u*h*.05+rr(R1,-.015,.015)*h;
+      if(dogAt.includes(j)){const D=DOGS[dn++];out.push({S:dog(x,y,h*D.d,rng(11+dn),{...D,w:Math.max(1.5,h*.021)}),n:idx++,d:R1()});continue;}
+      const P=ppl[i++],arms=[-1,1].map(s=>{const edge=(s<0&&j===0)||(s>0&&j===c-1)||(crouch&&dogAt.includes(j+s));
+        if(!crouch&&j===waver&&s>0&&!edge)return 'wave';
+        if(crouch)return !edge&&R1()<.3?'hug':'lap';
+        return edge?(R1()<.5?'hip':'down'):(R1()<.75?'hug':R1()<.5?'down':'hip');});
+      out.push({S:person(P,x,y,h*sc*P.s,crouch,arms,sp),n:idx++,d:R1()});
+    }
+  }
+  const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('class','crowd');svg.setAttribute('aria-hidden','true');
+  svg.innerHTML=`<defs><filter id="ink" color-interpolation-filters="sRGB" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="${Math.max(1,h*.012).toFixed(1)}"/></filter></defs><g filter="url(#ink)">`+
+    out.map(o=>`<g class="pp p${o.n%4+1}" style="--d:${(o.d*.45).toFixed(2)}s"><ellipse class="halo" cx="${f2(o.S.mass[0])}" cy="${f2(o.S.mass[1])}" rx="${f2(o.S.mass[2])}" ry="${f2(o.S.mass[3])}"/><ellipse class="halo" cx="${f2(o.S.disc[0])}" cy="${f2(o.S.disc[1])}" rx="${f2(o.S.disc[2])}" ry="${f2(o.S.disc[3])}"/><path class="halo" d="${o.S.join('')}" stroke-width="${f2(Math.max(3,h*.05))}"/><path class="ink" d="${o.S.join('')}"/></g>`).join('')+'</g>';
+  const old=pic.querySelector('.crowd');old?old.replaceWith(svg):pic.appendChild(svg);
+}
+let raf=0;new ResizeObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(draw);}).observe(pic);
+pic.addEventListener('click',()=>{if(!matchMedia('(hover:hover)').matches)pic.classList.toggle('drawn');});
+pic.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pic.classList.toggle('drawn');}});
+})();
+
 /* footer wordmark: measure the real text, box PUBLIC like the logo, then scale the whole thing to the page width */
 function fitMarks(){document.querySelectorAll('.bigmark').forEach(svg=>{
   if(!svg.getBoundingClientRect().width)return;
@@ -1466,7 +1619,7 @@ function welcome(){
   box.classList.add('bare');
   frame(0,`<div class="i-welcome w">
     <span class="flash" style="--d:.4s">Welcome</span><span class="flash" style="--d:2.6s">to</span>
-    <span class="stay" style="--d:4.8s"><span class="logo">PUBLIC</span><b>Wrapped 2026</b></span></div>`,
+    <span class="stay" style="--d:4.8s"><span class="logo">PUBLIC</span><b><span class="ch-wr">Wrapped</span> <span class="ch-yr">2026</span></b></span></div>`,
     `<span></span>${goBtn('Start')}`);
   later(()=>reveal('iGo'),6200);
   $('iGo').addEventListener('click',()=>{stage.classList.add('out');foot.innerHTML='';setTimeout(quote,reduce?0:650);});
@@ -1476,7 +1629,7 @@ function welcome(){
 function quote(){
   box.classList.add('bare');
   frame(1,`<p class="i-q serif i-type"><span id="iTyped"></span><span class="caret" aria-hidden="true"></span></p>
-    <p class="i-by" id="iBy">Ezgi, who started this</p>`,`<span></span>${goBtn('Continue')}`);
+    <p class="i-by" id="iBy">Ezgi</p>`,`<span></span>${goBtn('Continue')}`);
   stepL.textContent='';
   const out=$('iTyped'),full='“The more AI & tech I use, the more I find myself going to art & human creativity to… reorient.”';
   $('iGo').addEventListener('click',()=>{box.classList.remove('bare');piece();});
