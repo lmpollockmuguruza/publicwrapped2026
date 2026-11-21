@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script>{let t=null;try{t=localStorage.getItem('pw26-theme');}catch(e){}document.documentElement.dataset.theme=t==='light'?'light':'dark';let a=null;try{a=localStorage.getItem('pw26-accent');}catch(e){}if(/^(pink|yellow|peach|blue|all)$/.test(a||''))document.documentElement.dataset.accent=a;}</script>
+<script>{let t=null;try{t=localStorage.getItem('pw26-theme');}catch(e){}document.documentElement.dataset.theme=t==='light'?'light':'dark';let a=null;try{a=localStorage.getItem('pw26-accent');}catch(e){}if(a===null)a='all';if(/^(pink|yellow|peach|blue|all)$/.test(a||''))document.documentElement.dataset.accent=a;}</script>
 <title>PUBLIC Wrapped 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -383,6 +383,13 @@ footer .made{margin:0 0 clamp(14px,2vw,22px);display:flex;justify-content:space-
 .i-welcome .stay b{font-weight:800}
 @keyframes flash{0%{opacity:0;transform:translateY(12px)}25%{opacity:1;transform:none}72%{opacity:1;transform:none}100%{opacity:0;transform:translateY(-8px)}}
 .i-welcome .logo{font-size:.62em!important;padding:.32em .3em .26em .42em;border-width:.07em;display:inline-block}
+/* multicolour: the wordmark lands white, then takes the footer's colours one chunk at a time */
+@keyframes tint{to{color:var(--to)}}
+@keyframes tintBox{to{border-color:var(--c4)}}
+[data-accent=all] .i-welcome .stay .logo{border-color:var(--ink);--to:var(--c1);animation:tint 1s ease 6.3s forwards,tintBox 1s ease 6.8s forwards}
+[data-accent=all] .i-welcome .ch-yr{--to:var(--c3);animation:tint 1s ease 7.3s forwards}
+[data-accent=all] .i-welcome .ch-wr{--to:var(--c2);animation:tint 1s ease 7.8s forwards}
+@media(prefers-reduced-motion:reduce){[data-accent=all] .i-welcome .stay .logo{animation:none;color:var(--c1);border-color:var(--c4)}[data-accent=all] .i-welcome .ch-yr{animation:none;color:var(--c3)}[data-accent=all] .i-welcome .ch-wr{animation:none;color:var(--c2)}}
 .intro.bare .i-stage{align-items:stretch}
 .i-type{max-width:22ch}
 .i-type #iTyped{display:inline;opacity:1;animation:none;white-space:pre-wrap}
@@ -1612,7 +1619,7 @@ function welcome(){
   box.classList.add('bare');
   frame(0,`<div class="i-welcome w">
     <span class="flash" style="--d:.4s">Welcome</span><span class="flash" style="--d:2.6s">to</span>
-    <span class="stay" style="--d:4.8s"><span class="logo">PUBLIC</span><b>Wrapped 2026</b></span></div>`,
+    <span class="stay" style="--d:4.8s"><span class="logo">PUBLIC</span><b><span class="ch-wr">Wrapped</span> <span class="ch-yr">2026</span></b></span></div>`,
     `<span></span>${goBtn('Start')}`);
   later(()=>reveal('iGo'),6200);
   $('iGo').addEventListener('click',()=>{stage.classList.add('out');foot.innerHTML='';setTimeout(quote,reduce?0:650);});
