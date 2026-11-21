@@ -252,6 +252,8 @@ h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;tex
 [data-accent=all] .crowd .p1{--sig:var(--c1)}[data-accent=all] .crowd .p2{--sig:var(--c2)}[data-accent=all] .crowd .p3{--sig:var(--c3)}[data-accent=all] .crowd .p4{--sig:var(--c4)}
 .pic.drawn .crowd,.pic:focus-visible .crowd{opacity:1}
 .pic.drawn .pp,.pic:focus-visible .pp{opacity:1;transform:none;transition-delay:var(--d)}
+/* touch screens: fade the drawing in as one GPU layer (painted once) instead of 54 separate fades, so phones stay smooth */
+@media(hover:none){.crowd{will-change:opacity;transition:opacity .6s ease}.crowd .pp{opacity:1;transform:none;transition:none}}
 @media(hover:hover){.pic:hover .crowd{opacity:1}.pic:hover .pp{opacity:1;transform:none;transition-delay:var(--d)}}
 @media(prefers-reduced-motion:reduce){.crowd,.crowd .pp{transition:none!important}}
 .photo figcaption{display:flex;justify-content:space-between;gap:12px;padding:10px 0 0;font-size:14px;color:var(--mute)}
