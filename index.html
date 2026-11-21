@@ -244,6 +244,16 @@ h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;tex
 .photo{margin:0;padding-top:clamp(8px,2vw,20px)}
 #photo{padding-bottom:clamp(48px,7vw,96px)}
 .photo img{display:block;width:100%;aspect-ratio:21/8;object-fit:cover;filter:grayscale(1) contrast(1.08);background:var(--soft)}
+.photo .pic{position:relative;outline-offset:4px}
+.crowd{position:absolute;inset:0;width:100%;height:100%;background:var(--bg);opacity:0;transition:opacity .35s;pointer-events:none}
+.crowd .halo{fill:var(--bg);stroke:var(--bg);stroke-linejoin:round}
+.crowd .ink{fill:var(--sig);stroke:var(--sig);stroke-width:.6;stroke-linejoin:round}
+.crowd .pp{opacity:0;transform:translateY(3px);transform-box:fill-box;transition:opacity .3s,transform .4s cubic-bezier(.2,.7,.2,1)}
+[data-accent=all] .crowd .p1{--sig:var(--c1)}[data-accent=all] .crowd .p2{--sig:var(--c2)}[data-accent=all] .crowd .p3{--sig:var(--c3)}[data-accent=all] .crowd .p4{--sig:var(--c4)}
+.pic.drawn .crowd,.pic:focus-visible .crowd{opacity:1}
+.pic.drawn .pp,.pic:focus-visible .pp{opacity:1;transform:none;transition-delay:var(--d)}
+@media(hover:hover){.pic:hover .crowd{opacity:1}.pic:hover .pp{opacity:1;transform:none;transition-delay:var(--d)}}
+@media(prefers-reduced-motion:reduce){.crowd,.crowd .pp{transition:none!important}}
 .photo figcaption{display:flex;justify-content:space-between;gap:12px;padding:10px 0 0;font-size:14px;color:var(--mute)}
 .empty{padding:40px 0;color:var(--mute);border-top:1px solid var(--rule)}
 .pl{border-top:2px solid var(--rule)}
@@ -619,7 +629,7 @@ body{transition:background-color .3s,color .3s}
       <div class="lede">
         <div>
           <p class="ezgi">“The more AI &amp; tech I use, the more I find myself going to art &amp; human creativity to… reorient.”</p>
-          <p class="ezgi-by">Ezgi, who started this.</p>
+          <p class="ezgi-by">Ezgi</p>
         </div>
         <div class="side">
           <p class="note">Entries marked <span class="fake">made-up example</span> are fake, just to show how it works.<br>Submissions close 10 December · reveal 17 December</p>
@@ -635,8 +645,8 @@ body{transition:background-color .3s,color .3s}
 
   <section class="band" id="photo">
     <figure class="photo in">
-      <img src="public.png" alt="The PUBLIC office" onerror="this.closest('section').remove()">
-      <figcaption><span>PUBLIC, Embankment</span><span>2026</span></figcaption>
+      <div class="pic" tabindex="0" aria-label="The PUBLIC team. Hover, tap or press Enter to see all 50 of us drawn by hand."><img src="public.png" alt="The PUBLIC team" onerror="this.closest('section').remove()"></div>
+      <figcaption><span>PUBLIC</span><span>2026</span></figcaption>
     </figure>
   </section>
 
@@ -1428,6 +1438,101 @@ $('sndT').addEventListener('click',e=>{e.stopPropagation();stop();});
 }
 
 
+/* the photo's other side: all 50 of us, drawn by hand (brush strokes generated once, from a fixed seed, so it is always the same people) */
+(function(){
+const pic=document.querySelector('.photo .pic');if(!pic)return;
+const NS='http://www.w3.org/2000/svg';
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+const R0=rng(2026),pick=(r,a)=>a[Math.floor(r()*a.length)],rr=(r,a,b)=>a+(b-a)*r();
+/* the people: 20 men, 30 women, shuffled; traits fixed once */
+const HM=['short','short','spiky','curly','bald','quiff','short','long','side'],HW=['long','long','wavy','bob','bun','pony','curly','long','short','bob','pony','wavy'];
+let ppl=[];for(let i=0;i<50;i++){const m=i<20;ppl.push({m,hair:pick(R0,m?HM:HW),beard:m&&R0()<.3,glasses:R0()<.08,dress:!m&&R0()<.4,s:m?rr(R0,.95,1.1):rr(R0,.86,1.03),arm:[pick(R0,['down','down','down','hip','wave','hug','pocket']),pick(R0,['down','down','down','hip','hug','pocket'])],seed:Math.floor(R0()*1e9)});}
+for(let i=ppl.length-1;i>0;i--){const j=Math.floor(R0()*(i+1));[ppl[i],ppl[j]]=[ppl[j],ppl[i]];}
+/* geometry helpers */
+const bez=(p0,p1,p2,p3,n=22)=>{const o=[];for(let i=0;i<=n;i++){const t=i/n,u=1-t;o.push([u*u*u*p0[0]+3*u*u*t*p1[0]+3*u*t*t*p2[0]+t*t*t*p3[0],u*u*u*p0[1]+3*u*u*t*p1[1]+3*u*t*t*p2[1]+t*t*t*p3[1]]);}return o;};
+const arc=(cx,cy,rx,ry,a0,a1,n=28,f)=>{const o=[];for(let i=0;i<=n;i++){const a=(a0+(a1-a0)*i/n)*Math.PI/180,k=f?f(i/n):1;o.push([cx+Math.cos(a)*rx*k,cy+Math.sin(a)*ry*k]);}return o;};
+const join=(...a)=>a.reduce((o,p)=>o.concat(o.length?p.slice(1):p),[]);
+const f2=v=>Math.round(v*10)/10;
+/* one brush stroke: a filled outline, full in the middle, lifting off at the ends, with a little hand tremor */
+function brush(pts,w,r){
+  const n=pts.length,ph=r()*6.3,amp=w*.18,L=[],Rt=[];
+  const p=pts.map((q,i)=>{const t=i/(n-1);return [q[0]+Math.sin(t*7+ph)*amp*.6,q[1]+Math.cos(t*5+ph)*amp*.6];});
+  const start=rr(r,.35,.55),end=rr(r,.15,.35);
+  for(let i=0;i<n;i++){
+    const a=p[Math.max(0,i-1)],b=p[Math.min(n-1,i+1)],dx=b[0]-a[0],dy=b[1]-a[1],d=Math.hypot(dx,dy)||1,nx=-dy/d,ny=dx/d,t=i/(n-1);
+    const prof=t<.5?start+(1-start)*Math.sin(t*Math.PI):end+(1-end)*Math.sin(t*Math.PI),hw=w/2*prof*(1+Math.sin(t*11+ph)*.08);
+    L.push([p[i][0]+nx*hw,p[i][1]+ny*hw]);Rt.push([p[i][0]-nx*hw,p[i][1]-ny*hw]);
+  }
+  const o=L.concat(Rt.reverse());return 'M'+o.map(q=>f2(q[0])+' '+f2(q[1])).join('L')+'Z';
+}
+/* one person, feet at (x,y), h tall when standing */
+function person(P,x,y,h,sit,dir){
+  const r=rng(P.seed),W=Math.max(1.5,h*.021),S=[],add=(pts,k=1)=>S.push(brush(pts.map(q=>[x+q[0],y+q[1]]),W*k,r));
+  const hr=h*.095,hy=-h+hr*1.1+(sit?h*.36:0),sh=hy+hr*1.15+h*.07,hip=sit?-h*.17:-h*.46,lean=rr(r,-.03,.03)*h;
+  const tilt=rr(r,-10,10),a0=rr(r,0,360);
+  /* head: one loop that doesn't quite close */
+  const hry=hr*rr(r,1.02,1.12);S.disc=[x+lean*.5,y+hy,hr,hry];S.mass=[x+lean*.25,y+(hy+hr)/2,h*.13,(-hy-hr)/2];
+  add(arc(lean*.5,hy,hr,hry,a0,a0+rr(r,345,372),34,t=>1+Math.sin(t*9)*.03),1);
+  const hx=lean*.5,R=hr*1.12;
+  const hair={
+    long:()=>add(join(bez([hx-R*1.1,hy+hr*2],[hx-R*1.15,hy+hr*1.2],[hx-R*1.1,hy+hr*.4],[hx-R,hy]),arc(hx,hy,R,R*1.04,180,360,26),bez([hx+R,hy],[hx+R*1.1,hy+hr*.4],[hx+R*1.15,hy+hr*1.2],[hx+R*1.1,hy+hr*2]))),
+    wavy:()=>add(join(arc(hx,hy,R,R*1.04,180,360,26),bez([hx+R,hy],[hx+R*1.4,hy+hr*.7],[hx+R*.8,hy+hr*1.4],[hx+R*1.3,hy+hr*2.2]))),
+    bob:()=>add(join(bez([hx-R*1.25,hy+hr*.95],[hx-R*1.05,hy+hr*.9],[hx-R*1.12,hy+hr*.4],[hx-R,hy]),arc(hx,hy,R,R*1.04,180,360,26),bez([hx+R,hy],[hx+R*1.12,hy+hr*.4],[hx+R*1.05,hy+hr*.9],[hx+R*1.25,hy+hr*.95]))),
+    bun:()=>{add(arc(hx,hy,R*.98,R,200,340,18),.8);add(arc(hx+hr*.25,hy-hr*1.45,hr*.42,hr*.38,0,350,20),.9);},
+    pony:()=>{add(arc(hx,hy,R,R*1.04,190,350,22),.85);const s=dir;add(bez([hx+s*R*.85,hy-hr*.5],[hx+s*R*1.9,hy-hr*.6],[hx+s*R*1.6,hy+hr*.8],[hx+s*R*2.0,hy+hr*1.5]));},
+    curly:()=>add(arc(hx,hy,R*1.08,R*1.1,160,380,60,t=>1+Math.abs(Math.sin(t*Math.PI*9))*.16)),
+    short:()=>add(arc(hx,hy,R*.98,R,195,345,20),.85),
+    side:()=>add(join(arc(hx,hy,R,R,200,300,14),bez([hx+R*.2,hy-R],[hx+R*.7,hy-R*.75],[hx+R*.95,hy-R*.4],[hx+R,hy-R*.1])),.85),
+    spiky:()=>{for(let k=0;k<4;k++){const a=(230+k*27)*Math.PI/180;add([[hx+Math.cos(a)*hr*1.05,hy+Math.sin(a)*hr*1.05],[hx+Math.cos(a)*hr*1.38,hy+Math.sin(a)*hr*1.38]],.55);}},
+    quiff:()=>add(join(arc(hx,hy,R*.98,R,190,300,14),bez([hx+R*.3,hy-R*.95],[hx+R*.9,hy-R*1.5],[hx+R*1.3,hy-R*.9],[hx+R*.8,hy-R*.75])),.85),
+    bald:()=>{}
+  };
+  hair[P.hair]();
+  if(P.beard)add(arc(hx,hy,hr*1.05,hr*1.08,25,155,18),.9);
+  if(P.glasses){add(arc(hx-hr*.38,hy+hr*.05,hr*.25,hr*.22,0,355,14),.45);add(arc(hx+hr*.38,hy+hr*.05,hr*.25,hr*.22,0,355,14),.45);}
+  /* body */
+  const nk=[hx,hy+hr*1.15],hp=[lean*.2,hip];
+  add(bez(nk,[nk[0]+rr(r,-.02,.02)*h,nk[1]+h*.12],[hp[0]+rr(r,-.02,.02)*h,hp[1]-h*.1],hp,16));
+  if(P.dress&&!sit){const wy=-h*.6;add(join(bez([lean*.2-h*.04,wy],[lean*.2-h*.08,wy+h*.12],[-h*.15,-h*.28],[-h*.17,-h*.26]),bez([-h*.17,-h*.26],[-h*.06,-h*.24],[h*.06,-h*.24],[h*.17,-h*.26]),bez([h*.17,-h*.26],[h*.15,-h*.28],[lean*.2+h*.08,wy+h*.12],[lean*.2+h*.04,wy])),.9);}
+  /* legs */
+  for(const s of[-1,1]){
+    if(sit){const kn=[hp[0]+s*h*rr(r,.1,.13),hp[1]-h*rr(r,.06,.1)],ft=[s*h*rr(r,.13,.17),0];add(join(bez(hp,[hp[0]+s*h*.03,hp[1]-h*.04],[kn[0]-s*h*.04,kn[1]],kn,10),bez(kn,[kn[0]+s*h*.03,kn[1]+h*.03],[ft[0],ft[1]-h*.06],ft,10)),.95);}
+    else{const top=P.dress?[s*h*.06,-h*.27]:hp,ft=[s*h*rr(r,.07,.12),0];add(join(bez(top,[top[0]+s*h*.02,top[1]+h*.15],[ft[0]-s*h*.01,-h*.15],ft,16),bez(ft,[ft[0]+s*h*.02,ft[1]+h*.005],[ft[0]+s*h*.04,0],[ft[0]+s*h*.06,0],4)));}
+  }
+  /* arms */
+  const shp=[lean*.35,sh];
+  [-1,1].forEach((s,k)=>{const a=P.arm[k],A=h*.34;let pts;
+    if(a==='wave')pts=join(bez(shp,[shp[0]+s*h*.12,shp[1]-h*.02],[shp[0]+s*h*.22,shp[1]-h*.08],[shp[0]+s*h*.2,shp[1]-h*.2],12),bez([shp[0]+s*h*.2,shp[1]-h*.2],[shp[0]+s*h*.2,shp[1]-h*.26],[shp[0]+s*h*.22,shp[1]-h*.3],[shp[0]+s*h*.26,shp[1]-h*.34],8));
+    else if(a==='hip'){const el=[shp[0]+s*h*.17,shp[1]+h*.12];pts=join(bez(shp,[shp[0]+s*h*.08,shp[1]+h*.02],[el[0]-s*h*.02,el[1]-h*.06],el,10),bez(el,[el[0]+s*h*.01,el[1]+h*.05],[hp[0]+s*h*.1,hp[1]-h*.02],[hp[0]+s*h*.04,hp[1]],8));}
+    else if(a==='hug'&&!sit)pts=bez(shp,[shp[0]+s*h*.1,shp[1]-h*.05],[shp[0]+s*h*.22,shp[1]-h*.05],[shp[0]+s*h*.3,shp[1]+h*.01],14);
+    else if(a==='pocket')pts=bez(shp,[shp[0]+s*h*.07,shp[1]+h*.08],[shp[0]+s*h*.1,hip-h*.06],[shp[0]+s*h*.05,hip+h*.02],14);
+    else pts=bez(shp,[shp[0]+s*h*.06,shp[1]+h*.08],[shp[0]+s*h*.12,shp[1]+A*.6],[shp[0]+s*h*rr(r,.1,.15),shp[1]+A],14);
+    add(pts,.95);});
+  return S;
+}
+let last='';
+function draw(){
+  const b=pic.getBoundingClientRect(),W=Math.round(b.width),H=Math.round(b.height);if(!W||!H)return;
+  const key=W+'x'+H;if(key===last)return;last=key;
+  /* choose rows so the figures come out as large as they can */
+  let best=null;for(let rows=W/H>2?3:4;rows<=7;rows++){const per=Math.ceil(50/rows),h=Math.min(H*.92/(1+(rows-1)*.34),W/(per+.4)/.34);if(!best||h>best.h)best={rows,per,h};}
+  const {rows,h}=best,gap=h*.34,counts=[];let left=50;for(let k=0;k<rows;k++){const c=Math.round(left/(rows-k));counts.push(c);left-=c;}
+  const R1=rng(7);let i=0,out=[],idx=0;
+  for(let k=0;k<rows;k++){
+    const front=false,c=counts[k],base=H*.97-(rows-1-k)*gap-(front?0:0),sc=.88+.12*(k/(rows-1||1)),sp=W/(c+.2);
+    for(let j=0;j<c;j++){const P=ppl[i++],x=sp*(j+.6)+(k%2?sp*.15:-sp*.15)+rr(R1,-.12,.12)*sp,y=base+rr(R1,-.03,.03)*h;
+      out.push({S:person(P,x,y,h*sc*P.s*(front?1.08:1),front,j<c/2?1:-1),n:idx++,d:R1()});}
+  }
+  const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('class','crowd');svg.setAttribute('aria-hidden','true');
+  svg.innerHTML=`<defs><filter id="ink" color-interpolation-filters="sRGB" x="-2%" y="-2%" width="104%" height="104%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="3"/><feDisplacementMap in="SourceGraphic" scale="${Math.max(1,h*.012).toFixed(1)}"/></filter></defs><g filter="url(#ink)">`+
+    out.map(o=>`<g class="pp p${o.n%4+1}" style="--d:${(o.d*.45).toFixed(2)}s"><ellipse class="halo" cx="${f2(o.S.mass[0])}" cy="${f2(o.S.mass[1])}" rx="${f2(o.S.mass[2])}" ry="${f2(o.S.mass[3])}"/><ellipse class="halo" cx="${f2(o.S.disc[0])}" cy="${f2(o.S.disc[1])}" rx="${f2(o.S.disc[2])}" ry="${f2(o.S.disc[3])}"/><path class="halo" d="${o.S.join('')}" stroke-width="${f2(Math.max(3,h*.05))}"/><path class="ink" d="${o.S.join('')}"/></g>`).join('')+'</g>';
+  const old=pic.querySelector('.crowd');old?old.replaceWith(svg):pic.appendChild(svg);
+}
+let raf=0;new ResizeObserver(()=>{cancelAnimationFrame(raf);raf=requestAnimationFrame(draw);}).observe(pic);
+pic.addEventListener('click',()=>{if(!matchMedia('(hover:hover)').matches)pic.classList.toggle('drawn');});
+pic.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pic.classList.toggle('drawn');}});
+})();
+
 /* footer wordmark: measure the real text, box PUBLIC like the logo, then scale the whole thing to the page width */
 function fitMarks(){document.querySelectorAll('.bigmark').forEach(svg=>{
   if(!svg.getBoundingClientRect().width)return;
@@ -1477,7 +1582,7 @@ function welcome(){
 function quote(){
   box.classList.add('bare');
   frame(1,`<p class="i-q serif i-type"><span id="iTyped"></span><span class="caret" aria-hidden="true"></span></p>
-    <p class="i-by" id="iBy">Ezgi, who started this</p>`,`<span></span>${goBtn('Continue')}`);
+    <p class="i-by" id="iBy">Ezgi</p>`,`<span></span>${goBtn('Continue')}`);
   stepL.textContent='';
   const out=$('iTyped'),full='“The more AI & tech I use, the more I find myself going to art & human creativity to… reorient.”';
   $('iGo').addEventListener('click',()=>{box.classList.remove('bare');piece();});
