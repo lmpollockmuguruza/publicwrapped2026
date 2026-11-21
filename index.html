@@ -430,8 +430,8 @@ html{scroll-padding-top:96px}
 .top{position:relative}
 body.nav-away .top .in{position:fixed;top:14px;left:50%;z-index:6;width:min(460px,calc(100vw - 32px));max-width:none;flex-wrap:nowrap;min-height:58px;padding:8px 8px 8px 18px;background:var(--bg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 10px 30px -12px color-mix(in srgb,#000 40%,transparent);opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,-14px);transition:opacity .25s,transform .3s cubic-bezier(.2,.7,.2,1),visibility 0s .3s}
 body.nav-pill .top .in{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0);transition:opacity .25s,transform .3s cubic-bezier(.2,.7,.2,1)}
-body.nav-away .mark{gap:10px;font-size:16px}
-body.nav-away .logo{font-size:13px!important;padding:5px 6px 4px 8px}
+body.nav-away .top .mark{gap:10px;font-size:16px}
+body.nav-away .top .logo{font-size:13px!important;padding:5px 6px 4px 8px}
 body.nav-away .menuBtn{display:inline-flex}
 body.nav-away nav{position:absolute;top:calc(100% + 8px);left:0;right:0;flex-direction:column;flex-wrap:nowrap;gap:0;padding:18px 20px 22px;background:var(--bg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 18px 40px -16px color-mix(in srgb,#000 45%,transparent);max-height:calc(100vh - 110px);overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .2s,transform .25s cubic-bezier(.2,.7,.2,1),visibility 0s .25s}
 body.nav-away.menu nav{opacity:1;visibility:visible;transform:none;transition:opacity .2s,transform .25s cubic-bezier(.2,.7,.2,1)}
@@ -448,7 +448,8 @@ body.nav-away nav .accent{margin-top:14px;align-self:stretch}
 body.nav-away nav .acBtn{display:none}
 body.nav-away nav .acPop{display:flex;position:static;flex-direction:row;flex-wrap:wrap;gap:6px;border:0;background:none;min-width:0}
 body.nav-away nav .acPop button{width:auto;min-height:36px;padding:0 12px 0 8px;border:1px solid var(--rule);border-radius:999px;font-size:14px;gap:8px;font-weight:400;letter-spacing:0}
-body.nav-away .scrim{display:block;position:fixed;inset:0;z-index:11;background:color-mix(in srgb,#000 35%,transparent);opacity:0;pointer-events:none;transition:opacity .25s}
+body.nav-away .scrim{display:block;position:fixed;inset:0;z-index:11;background:color-mix(in srgb,#000 30%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s}
+body.nav-snap .top .in,body.nav-snap nav{transition:none!important}
 body.nav-away.menu .scrim{opacity:1;pointer-events:auto}
 body.nav-away .top{z-index:15}
 }
@@ -900,7 +901,7 @@ function navScroll(){
   const b=document.body;
   if(!wide.matches){if(b.classList.contains('nav-away')){b.classList.remove('nav-away','nav-pill');topEl.style.height='';}return;}
   const h=topEl.offsetHeight,y=scrollY;
-  if(y>h&&!b.classList.contains('nav-away')){topEl.style.height=h+'px';b.classList.add('nav-away');}
+  if(y>h&&!b.classList.contains('nav-away')){topEl.style.height=h+'px';b.classList.add('nav-away','nav-snap');topEl.offsetWidth;b.classList.remove('nav-snap');}
   else if(y<=h&&b.classList.contains('nav-away')){setMenu(false);b.classList.remove('nav-away','nav-pill');topEl.style.height='';}
   const pill=y>h+220;
   if(!pill&&b.classList.contains('nav-pill'))setMenu(false);
