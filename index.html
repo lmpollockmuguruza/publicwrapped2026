@@ -424,6 +424,35 @@ body.menu .menuBtn i::after{top:5px;transform:rotate(-45deg)}
 .scrim{display:none}
 /* mid-size screens: a tighter nav so the header stays on one line */
 @media(min-width:1221px) and (max-width:1400px){nav{gap:4px}nav a,nav button{padding:0 11px;font-size:14px}.top .in{gap:10px 12px}.mark{gap:10px}nav .theme button{padding:0 10px}}
+/* desktop: the header scrolls away with the page; a little further down, a centred floating pill (mark + Menu) takes its place and opens the sections as a panel */
+@media(min-width:1221px){
+html{scroll-padding-top:96px}
+.top{position:relative}
+body.nav-away .top .in{position:fixed;top:14px;left:50%;z-index:6;width:min(460px,calc(100vw - 32px));max-width:none;flex-wrap:nowrap;min-height:58px;padding:8px 8px 8px 18px;background:var(--bg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 10px 30px -12px color-mix(in srgb,#000 40%,transparent);opacity:0;visibility:hidden;pointer-events:none;transform:translate(-50%,-14px);transition:opacity .25s,transform .3s cubic-bezier(.2,.7,.2,1),visibility 0s .3s}
+body.nav-pill .top .in{opacity:1;visibility:visible;pointer-events:auto;transform:translate(-50%,0);transition:opacity .25s,transform .3s cubic-bezier(.2,.7,.2,1)}
+body.nav-away .mark{gap:10px;font-size:16px}
+body.nav-away .logo{font-size:13px!important;padding:5px 6px 4px 8px}
+body.nav-away .menuBtn{display:inline-flex}
+body.nav-away nav{position:absolute;top:calc(100% + 8px);left:0;right:0;flex-direction:column;flex-wrap:nowrap;gap:0;padding:18px 20px 22px;background:var(--bg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 18px 40px -16px color-mix(in srgb,#000 45%,transparent);max-height:calc(100vh - 110px);overflow-y:auto;opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .2s,transform .25s cubic-bezier(.2,.7,.2,1),visibility 0s .25s}
+body.nav-away.menu nav{opacity:1;visibility:visible;transform:none;transition:opacity .2s,transform .25s cubic-bezier(.2,.7,.2,1)}
+body.nav-away nav a,body.nav-away nav button{min-height:52px;padding:0;border:0;border-bottom:1px solid var(--rule);border-radius:0;font-size:22px;font-weight:560;letter-spacing:-.02em;width:100%;justify-content:flex-start}
+body.nav-away nav a:hover{background:none;color:var(--sig)}
+body.nav-away nav{counter-reset:n}
+body.nav-away nav a{gap:0}
+body.nav-away nav a::before{counter-increment:n;content:counter(n,decimal-leading-zero);width:2.4em;flex:none;font-size:14px;font-weight:400;color:var(--mute);letter-spacing:0;font-variant-numeric:tabular-nums}
+body.nav-away nav a:first-child{border-top:2px solid var(--rule)}
+body.nav-away nav #meBtn{margin-top:20px;border-radius:999px;justify-content:center;font-size:16px;min-height:48px;border:1px solid var(--ink)}
+body.nav-away nav .theme{margin-top:14px;align-self:flex-start}
+body.nav-away nav .theme button{min-height:32px;padding:0 12px;font-size:14px;width:auto;border:0;border-radius:999px;font-weight:400;letter-spacing:0}
+body.nav-away nav .accent{margin-top:14px;align-self:stretch}
+body.nav-away nav .acBtn{display:none}
+body.nav-away nav .acPop{display:flex;position:static;flex-direction:row;flex-wrap:wrap;gap:6px;border:0;background:none;min-width:0}
+body.nav-away nav .acPop button{width:auto;min-height:36px;padding:0 12px 0 8px;border:1px solid var(--rule);border-radius:999px;font-size:14px;gap:8px;font-weight:400;letter-spacing:0}
+body.nav-away .scrim{display:block;position:fixed;inset:0;z-index:11;background:color-mix(in srgb,#000 35%,transparent);opacity:0;pointer-events:none;transition:opacity .25s}
+body.nav-away.menu .scrim{opacity:1;pointer-events:auto}
+body.nav-away .top{z-index:15}
+}
+@media(min-width:1221px) and (prefers-reduced-motion:reduce){body.nav-away .top .in,body.nav-away nav{transition:none!important}}
 /* narrow screens: the nav becomes a side panel */
 @media(max-width:1220px){
 .top .in{flex-wrap:nowrap;min-height:56px;padding-block:6px}
@@ -865,10 +894,25 @@ function setMenu(on){document.body.classList.toggle('menu',on);$('menuBtn').setA
 $('menuBtn').addEventListener('click',()=>setMenu(!document.body.classList.contains('menu')));
 $('scrim').addEventListener('click',()=>setMenu(false));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('menu'))setMenu(false);});
+/* desktop: header scrolls away, then the floating pill appears */
+const wide=matchMedia('(min-width:1221px)'),topEl=document.querySelector('.top');
+function navScroll(){
+  const b=document.body;
+  if(!wide.matches){if(b.classList.contains('nav-away')){b.classList.remove('nav-away','nav-pill');topEl.style.height='';}return;}
+  const h=topEl.offsetHeight,y=scrollY;
+  if(y>h&&!b.classList.contains('nav-away')){topEl.style.height=h+'px';b.classList.add('nav-away');}
+  else if(y<=h&&b.classList.contains('nav-away')){setMenu(false);b.classList.remove('nav-away','nav-pill');topEl.style.height='';}
+  const pill=y>h+220;
+  if(!pill&&b.classList.contains('nav-pill'))setMenu(false);
+  b.classList.toggle('nav-pill',pill);
+}
+addEventListener('scroll',navScroll,{passive:true});
+wide.addEventListener('change',()=>{setMenu(false);navScroll();});
+navScroll();
 function jumpTo(id){
   const sec=$(id);if(!sec)return;
   const el=sec.classList.contains('sec')?sec.querySelector('.in'):sec;
-  const head=document.querySelector('.top').getBoundingClientRect().height;
+  const head=wide.matches?84:document.querySelector('.top').getBoundingClientRect().height;
   const gap=sec.classList.contains('sec')?20:0;
   window.scrollTo({top:el.getBoundingClientRect().top+scrollY-head-gap,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
   history.replaceState(null,'','#'+id);
