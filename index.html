@@ -14,7 +14,7 @@
    PICTURE the index itself, big titles on hairline rules, generated covers that draw themselves, the year as a 12-column band, a crate view; a black Wrapped story on top
    COLOUR concrete grey ground, near-black ink, hairlines, one signal orange used only for state and "yours"
    TYPE   Schibsted Grotesk at medium weight, tight, for the interface; Newsreader for people's own words, so the human voice is set in a different hand
-   LAYOUT laptop: title + Ezgi's words, you, picker, year, wall, playlist, form. phone: everything stacks; the year scrolls sideways */
+   LAYOUT laptop: title + Borges's words + why we made this, you, picker, year, wall, playlist, form. phone: everything stacks; the year scrolls sideways */
 :root{color-scheme:light dark;--bg:light-dark(#e9e8e3,#121211);--ink:light-dark(#111110,#e9e8e3);--mute:light-dark(#66655f,#9a9992);--rule:light-dark(#111110,#3a3a37);--soft:light-dark(#dcdbd5,#1c1c1a);--sig:#ff4a12}
 :root[data-theme=light]{color-scheme:light}
 :root[data-theme=dark]{color-scheme:dark}
@@ -46,8 +46,33 @@ nav #meBtn{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .hero{padding-top:clamp(40px,7vw,96px);padding-bottom:clamp(32px,4vw,52px)}
 h1{font-size:clamp(40px,7.2vw,96px);line-height:.98;font-weight:560;margin:0;text-wrap:balance;max-width:14ch}
 .lede{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px 48px;margin-top:34px;align-items:end}
-.ezgi{font-family:Newsreader,Georgia,serif;font-optical-sizing:auto;margin:0;font-size:clamp(22px,2.5vw,30px);line-height:1.28;max-width:34ch;text-wrap:pretty}
-.ezgi-by{margin:12px 0 0;color:var(--mute);font-size:15px}
+.lq{font-family:Newsreader,Georgia,serif;font-optical-sizing:auto;margin:0;font-size:clamp(22px,2.5vw,30px);line-height:1.28;max-width:34ch;text-wrap:pretty}
+.lq-by{margin:12px 0 0;color:var(--mute);font-size:15px}
+.whyBtn{margin-top:14px;min-height:44px;color:var(--ink)}
+.whyBtn:hover{color:var(--sig)}
+/* why we made this: opens like the floating menu, a rounded panel over a blurred scrim */
+.why-scrim{position:fixed;inset:0;z-index:30;background:color-mix(in srgb,#000 30%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .25s}
+.why{position:fixed;top:50%;left:50%;z-index:31;width:min(620px,calc(100vw - 32px));max-height:calc(100dvh - 48px);overflow-y:auto;overscroll-behavior:contain;padding:clamp(22px,3.5vw,36px) clamp(20px,3.5vw,40px) clamp(26px,3.5vw,40px);background:var(--bg);border:1px solid var(--rule);border-radius:18px;box-shadow:0 18px 40px -16px color-mix(in srgb,#000 45%,transparent);opacity:0;visibility:hidden;transform:translate(-50%,calc(-50% - 8px));transition:opacity .2s,transform .25s cubic-bezier(.2,.7,.2,1),visibility 0s .25s}
+body.why-on .why{opacity:1;visibility:visible;transform:translate(-50%,-50%);transition:opacity .2s,transform .25s cubic-bezier(.2,.7,.2,1)}
+body.why-on .why-scrim{opacity:1;pointer-events:auto}
+.why-h{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-bottom:14px;margin-bottom:22px;border-bottom:2px solid var(--rule)}
+.why-h h2{margin:0;font-size:clamp(26px,3vw,34px);line-height:1;font-weight:560}
+.why-x{min-height:40px;padding:0 14px;border:1px solid var(--rule);border-radius:999px;background:none;cursor:pointer;font-size:15px;flex:none}
+.why-x:hover{background:var(--soft)}
+.why-b p{font-family:Newsreader,Georgia,serif;font-optical-sizing:auto;font-size:19px;line-height:1.5;margin:0 0 1em;text-wrap:pretty}
+.why-b p:last-child{margin-bottom:0}
+.why-more{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule)}
+.why-more h3{margin:0 0 6px;font-size:14px;font-weight:400;color:var(--mute)}
+.why-more ul{list-style:none;margin:0;padding:0}
+.why-more li{border-bottom:1px solid color-mix(in srgb,var(--rule) 40%,transparent)}
+.why-more li:last-child{border-bottom:0}
+.why-more a{display:flex;flex-direction:column;gap:2px;padding:12px 0;text-decoration:none;font-size:16px;line-height:1.3}
+.why-more a span{color:var(--mute);font-size:14px}
+.why-more a:hover b{color:var(--sig)}
+.why-more b{font-weight:560;transition:color .15s}
+.why-b blockquote{margin:0 0 1em;padding-left:16px;border-left:2px solid var(--sig);font-family:Newsreader,Georgia,serif;font-size:21px;line-height:1.4;font-style:italic}
+@media(max-width:600px){.why{top:auto;bottom:0;left:0;width:100%;max-height:88dvh;border-radius:18px 18px 0 0;border-bottom:0;transform:translateY(24px)}body.why-on .why{transform:none}}
+@media(prefers-reduced-motion:reduce){.why,.why-scrim{transition:none!important}}
 .side{display:flex;flex-direction:column;gap:14px;align-items:flex-end;text-align:right}
 .note{color:var(--mute);font-size:14px;margin:0}
 .acts{display:flex;gap:10px 14px;flex-wrap:wrap;align-items:center}
@@ -630,6 +655,27 @@ body{transition:background-color .3s,color .3s}
   </div>
 </header>
 <div class="scrim" id="scrim"></div>
+<div class="why-scrim" id="whyScrim"></div>
+<div class="why" id="why" role="dialog" aria-modal="true" aria-labelledby="whyT" tabindex="-1">
+  <div class="why-h"><h2 class="w" id="whyT">Why we made this</h2><button type="button" class="why-x" id="whyX">Close</button></div>
+  <div class="why-b">
+    <p>Every December, with great anticipation, our apps tell us what we did with our year. Spotify counts our minutes and gives us an age. Letterboxd counts our films and tells us our patterns. It’s so fun, but it’s also a little odd, because counts are the least interesting thing about a year!</p>
+    <p>Nobody remembers an album as 2,340 minutes over the last 365 days. You remember it as the walk home after Ship &amp; Shovell, the soundtrack to working from home, or the friend who sent it on Slack on a Friday afternoon with no message attached.</p>
+    <p>How many times you rewatched a film isn’t the point. What it did to you is. That’s why our film and book clubs exist: for the chance of passing on what it did to us.</p>
+    <p>The Argentine writer Borges, borrowing from the philosopher Berkeley, said something similar long before any of this:</p>
+    <blockquote>“the taste of the apple lies in the contact of the fruit with the palate, not in the fruit itself.”</blockquote>
+    <p>So this isn’t a list of things we’ve simply seen. It’s a list of things we carry forward. Calvino said a classic is a book that has never finished saying what it has to say, and most of us have at least one of those (book, film, exhibition, album) from this year, even if we haven’t had the chance to stop and think about it.</p>
+    <p>In a year when machines can make something that looks a lot like art, the meaning is still made at our end: in choosing, feeling, and passing it on.</p>
+    <p>So that’s PUBLIC Wrapped: what moved us, made us think, or is staying with us for at least another year. Have a look at what everyone else is taking with them!</p>
+    <div class="why-more">
+      <h3>Further reading</h3>
+      <ul>
+        <li><a href="https://www.hup.harvard.edu/file/feeds/PDF/9780674302457_sample.pdf" target="_blank" rel="noopener"><b>Jorge Luis Borges, <i>This Craft of Verse</i> ↗</b><span>His Norton Lectures at Harvard, 1967–68, where the apple comes from</span></a></li>
+        <li><a href="https://www.newyorker.com/culture/the-weekend-essay/why-ai-isnt-going-to-make-art" target="_blank" rel="noopener"><b>Ted Chiang, “Why A.I. Isn’t Going to Make Art” ↗</b><span>The New Yorker</span></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
 
 <main id="top">
   <section class="band hero">
@@ -637,8 +683,9 @@ body{transition:background-color .3s,color .3s}
       <h1 class="w">What we carried out of 2026</h1>
       <div class="lede">
         <div>
-          <p class="ezgi">“The more AI &amp; tech I use, the more I find myself going to art &amp; human creativity to… reorient.”</p>
-          <p class="ezgi-by">Ezgi</p>
+          <p class="lq">“The taste of the apple lies in the contact of the fruit with the palate, not in the fruit itself.”</p>
+          <p class="lq-by">— Jorge Luis Borges</p>
+          <button type="button" class="linkbtn whyBtn" id="whyBtn" aria-haspopup="dialog" aria-controls="why">Why we made this →</button>
         </div>
         <div class="side">
           <p class="note">Entries marked <span class="fake">made-up example</span> are fake, just to show how it works.<br>Submissions close 10 December · reveal 17 December</p>
@@ -914,6 +961,21 @@ function setMenu(on){document.body.classList.toggle('menu',on);$('menuBtn').setA
 $('menuBtn').addEventListener('click',()=>setMenu(!document.body.classList.contains('menu')));
 $('scrim').addEventListener('click',()=>setMenu(false));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.body.classList.contains('menu'))setMenu(false);});
+/* why we made this: a floating panel, same motion as the menu */
+{
+let back=null;
+const setWhy=on=>{document.body.classList.toggle('why-on',on);$('whyBtn').setAttribute('aria-expanded',on);
+  if(on){back=document.activeElement;setMenu(false);document.body.style.overflow='hidden';$('why').scrollTop=0;setTimeout(()=>$('whyX').focus({preventScroll:true}),30);}
+  else{document.body.style.overflow='';back?.focus({preventScroll:true});}};
+$('whyBtn').addEventListener('click',()=>setWhy(true));
+$('whyX').addEventListener('click',()=>setWhy(false));
+$('whyScrim').addEventListener('click',()=>setWhy(false));
+document.addEventListener('keydown',e=>{
+  if(!document.body.classList.contains('why-on'))return;
+  if(e.key==='Escape'){setWhy(false);return;}
+  if(e.key==='Tab'){e.preventDefault();$('whyX').focus();}
+});
+}
 /* desktop: header scrolls away, then the floating pill appears */
 const wide=matchMedia('(min-width:1221px)'),topEl=document.querySelector('.top');
 function navScroll(){
@@ -1612,6 +1674,32 @@ function frame(n,html,footHtml=''){
   stage.replaceWith(fresh);stage=fresh;foot.innerHTML=footHtml;
   void stage.offsetWidth;stage.classList.add('in');
 }
+/* soft key clicks for the typed quote: filtered noise ticks under a master gain that eases in, so the sound settles rather than arrives */
+const keys=(()=>{
+  let c=null,out=null,noise=null;
+  function wake(){
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    try{
+      if(!c){c=new AC();out=c.createGain();out.gain.value=0;
+        const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=4200;out.connect(lp);lp.connect(c.destination);
+        const len=Math.floor(c.sampleRate*.03);noise=c.createBuffer(1,len,c.sampleRate);const d=noise.getChannelData(0);
+        for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,4);}
+      if(c.state==='suspended')c.resume();
+    }catch(e){c=null;}
+  }
+  function settle(sec=3.2){if(!c)return;const t=c.currentTime,g=out.gain;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.linearRampToValueAtTime(0.0001,t+.01);g.setTargetAtTime(.5,t+.05,sec/3);}
+  function fade(sec=1.2){if(!c)return;const t=c.currentTime,g=out.gain;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.setTargetAtTime(0,t,sec/3);}
+  function tick(kind){
+    if(!c||c.state!=='running')return;
+    const t=c.currentTime,s=c.createBufferSource(),bp=c.createBiquadFilter(),e=c.createGain();
+    s.buffer=noise;s.playbackRate.value=.85+Math.random()*.3;
+    bp.type='bandpass';bp.Q.value=1.4;bp.frequency.value=kind==='del'?1300:kind==='space'?1700:2100+Math.random()*700;
+    const peak=(kind==='space'?.16:kind==='del'?.14:.11)*(.8+Math.random()*.4);
+    e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(peak,t+.002);e.gain.exponentialRampToValueAtTime(.0001,t+.045);
+    s.connect(bp);bp.connect(e);e.connect(out);s.start(t);s.stop(t+.06);
+  }
+  return {wake,settle,fade,tick};
+})();
 const goBtn=(label,id='iGo',on=false)=>`<button type="button" class="i-go${on?' on':''}" id="${id}">${label}</button>`;
 function reveal(id){const b=$(id);if(b){b.classList.add('on');b.focus({preventScroll:true});}}
 function putArtBack(){if(art.parentNode!==artHome){artHome.insertBefore(art,artNext);artCtl.recolour();}}
@@ -1624,32 +1712,36 @@ function welcome(){
     <span class="stay" style="--d:4.8s"><span class="logo">PUBLIC</span><b><span class="ch-wr">Wrapped</span> <span class="ch-yr">2026</span></b></span></div>`,
     `<span></span>${goBtn('Start')}`);
   later(()=>reveal('iGo'),6200);
-  $('iGo').addEventListener('click',()=>{stage.classList.add('out');foot.innerHTML='';setTimeout(quote,reduce?0:650);});
+  $('iGo').addEventListener('click',()=>{keys.wake();stage.classList.add('out');foot.innerHTML='';setTimeout(quote,reduce?0:650);});
 }
 
 /* 1. the quote, typed live, mistakes and all */
 function quote(){
   box.classList.add('bare');
   frame(1,`<p class="i-q serif i-type"><span id="iTyped"></span><span class="caret" aria-hidden="true"></span></p>
-    <p class="i-by" id="iBy">Ezgi</p>`,`<span></span>${goBtn('Continue')}`);
+    <p class="i-by" id="iBy">— Jorge Luis Borges</p>`,`<span></span>${goBtn('Continue')}`);
   stepL.textContent='';
-  const out=$('iTyped'),full='“The more AI & tech I use, the more I find myself going to art & human creativity to… reorient.”';
-  $('iGo').addEventListener('click',()=>{box.classList.remove('bare');piece();});
-  const done=()=>{$('iBy').classList.add('on');later(()=>reveal('iGo'),1400);};
+  // the caret takes PUBLIC's colours in turn, one per blink
+  const caret=stage.querySelector('.caret'),hues=['#f090a6','#e9993f','#fae056','#91c7fa'];let hue=0;
+  caret.style.background=hues[0];caret.addEventListener('animationiteration',()=>{caret.style.background=hues[++hue%hues.length];});
+  const out=$('iTyped'),full='“The taste of the apple lies in the contact of the fruit with the palate, not in the fruit itself.”';
+  $('iGo').addEventListener('click',()=>{keys.fade(.4);box.classList.remove('bare');piece();});
+  const done=()=>{keys.fade();$('iBy').classList.add('on');later(()=>reveal('iGo'),1400);};
   if(reduce){out.textContent=full;done();return;}
+  keys.wake();keys.settle();
   // type, slip, delete one; type, slip, delete two; finish
-  const script=[['type','“The more AI & tech I usee'],['del',1],['type',', the more I find myself goign'],['del',2],['type','ng to art & human creativity to… reorient.”']];
+  const script=[['type','“The taste of the apple liee'],['del',1],['type','s in the contact of the fruit with the palaet'],['del',2],['type','te, not in the fruit itself.”']];
   let k=0,buf='';
   const pace=c=>c===','||c==='…'?380:c===' '?70+Math.random()*60:45+Math.random()*75;
   (function run(){
     const st=script[k];if(!st){later(done,700);return;}
     if(st[0]==='type'){
       if(!st.i)st.i=0;
-      if(st.i<st[1].length){const c=st[1][st.i++];buf+=c;out.textContent=buf;later(run,pace(c));return;}
+      if(st.i<st[1].length){const c=st[1][st.i++];buf+=c;out.textContent=buf;keys.tick(c===' '?'space':'key');later(run,pace(c));return;}
       k++;later(run,k===1||k===3?320:200);return;
     }
     if(!st.n)st.n=0;
-    if(st.n<st[1]){buf=buf.slice(0,-1);out.textContent=buf;st.n++;later(run,170);return;}
+    if(st.n<st[1]){buf=buf.slice(0,-1);out.textContent=buf;keys.tick('del');st.n++;later(run,170);return;}
     k++;later(run,260);
   })();
 }
@@ -1730,7 +1822,7 @@ function name(){
 }
 
 function finish(toAdd){
-  clear();putArtBack();artCtl.onShift=null;box.classList.remove('bare');
+  clear();keys.fade(.3);putArtBack();artCtl.onShift=null;box.classList.remove('bare');
   try{localStorage.setItem('pw26-intro','done');}catch(e){}
   box.classList.remove('on');document.body.style.overflow='';introOn=false;
   if(toAdd){jumpTo('add');setTimeout(()=>$('f-title').focus({preventScroll:true}),500);}else window.scrollTo(0,0);
