@@ -1689,34 +1689,23 @@ const keys=(()=>{
   }
   function settle(sec=3.2){if(!c)return;const t=c.currentTime,g=out.gain;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.linearRampToValueAtTime(0.0001,t+.01);g.setTargetAtTime(.5,t+.05,sec/3);}
   function fade(sec=1.2){if(!c)return;const t=c.currentTime,g=out.gain;g.cancelScheduledValues(t);g.setValueAtTime(g.value,t);g.setTargetAtTime(0,t,sec/3);}
-  // one filtered noise burst: the building block for strikes, clacks and ratchets
+  // one filtered noise burst: the building block for each key sound
   function burst(t,f,q,peak,dec){
     const s=c.createBufferSource(),bp=c.createBiquadFilter(),e=c.createGain();
     s.buffer=noise;s.playbackRate.value=.9+Math.random()*.2;bp.type='bandpass';bp.frequency.value=f;bp.Q.value=q;
     e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(peak,t+.0015);e.gain.exponentialRampToValueAtTime(.0001,t+dec);
     s.connect(bp);bp.connect(e);e.connect(out);s.start(t);s.stop(t+dec+.02);
   }
-  function ping(t,f,peak,dec){
-    const o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=f;
-    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+dec);
-    o.connect(g);g.connect(out);o.start(t);o.stop(t+dec+.02);
-  }
-  // a typewriter: the typebar strikes the platen (sharp, a little metallic), then the carriage clacks along
+  // a phone keyboard: a tiny, dry "tock" per key, a slightly fuller one for space, a lower one for delete
   function tick(kind){
     if(!c||c.state!=='running')return;
-    const t=c.currentTime,v=.8+Math.random()*.4;
-    if(kind==='space'){burst(t,650,1,.16*v,.06);burst(t+.012,1900,2,.05*v,.03);return;}
-    if(kind==='del'){burst(t,1700,3,.09*v,.025);burst(t+.03,1500,3,.07*v,.025);return;}
-    burst(t,2900+Math.random()*800,2,.15*v,.03);
-    ping(t,3600+Math.random()*500,.012*v,.09);
-    burst(t+.009,1000+Math.random()*250,1.2,.1*v,.05);
+    const t=c.currentTime,v=.85+Math.random()*.3;
+    if(kind==='space'){burst(t,1250,1.4,.17*v,.022);burst(t,320,1,.1*v,.028);return;}
+    if(kind==='del'){burst(t,1050,1.6,.16*v,.024);burst(t,280,1,.08*v,.026);return;}
+    burst(t,1900+Math.random()*250,1.6,.16*v,.016);
+    burst(t,420,1,.07*v,.02);
   }
-  // the carriage-return bell, softly, once the line is done
-  function bell(){
-    if(!c||c.state!=='running')return;
-    const t=c.currentTime+.05;ping(t,2093,.05,1.4);ping(t,4204,.018,.8);ping(t,6290,.006,.4);
-  }
-  return {wake,settle,fade,tick,bell};
+  return {wake,settle,fade,tick};
 })();
 const goBtn=(label,id='iGo',on=false)=>`<button type="button" class="i-go${on?' on':''}" id="${id}">${label}</button>`;
 function reveal(id){const b=$(id);if(b){b.classList.add('on');b.focus({preventScroll:true});}}
@@ -1744,7 +1733,7 @@ function quote(){
   caret.style.background=hues[0];caret.addEventListener('animationiteration',()=>{caret.style.background=hues[++hue%hues.length];});
   const out=$('iTyped'),full='“The taste of the apple lies in the contact of the fruit with the palate, not in the fruit itself.”';
   $('iGo').addEventListener('click',()=>{keys.fade(.4);box.classList.remove('bare');piece();});
-  const done=()=>{keys.bell();later(()=>keys.fade(),1600);$('iBy').classList.add('on');later(()=>reveal('iGo'),1400);};
+  const done=()=>{keys.fade();$('iBy').classList.add('on');later(()=>reveal('iGo'),1400);};
   if(reduce){out.textContent=full;done();return;}
   keys.wake();keys.settle();
   // type, slip, delete one; type, slip, delete two; finish
