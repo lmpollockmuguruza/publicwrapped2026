@@ -61,6 +61,15 @@ body.why-on .why-scrim{opacity:1;pointer-events:auto}
 .why-x:hover{background:var(--soft)}
 .why-b p{font-family:Newsreader,Georgia,serif;font-optical-sizing:auto;font-size:19px;line-height:1.5;margin:0 0 1em;text-wrap:pretty}
 .why-b p:last-child{margin-bottom:0}
+.why-more{margin-top:26px;padding-top:14px;border-top:1px solid var(--rule)}
+.why-more h3{margin:0 0 6px;font-size:14px;font-weight:400;color:var(--mute)}
+.why-more ul{list-style:none;margin:0;padding:0}
+.why-more li{border-bottom:1px solid color-mix(in srgb,var(--rule) 40%,transparent)}
+.why-more li:last-child{border-bottom:0}
+.why-more a{display:flex;flex-direction:column;gap:2px;padding:12px 0;text-decoration:none;font-size:16px;line-height:1.3}
+.why-more a span{color:var(--mute);font-size:14px}
+.why-more a:hover b{color:var(--sig)}
+.why-more b{font-weight:560;transition:color .15s}
 .why-b blockquote{margin:0 0 1em;padding-left:16px;border-left:2px solid var(--sig);font-family:Newsreader,Georgia,serif;font-size:21px;line-height:1.4;font-style:italic}
 @media(max-width:600px){.why{top:auto;bottom:0;left:0;width:100%;max-height:88dvh;border-radius:18px 18px 0 0;border-bottom:0;transform:translateY(24px)}body.why-on .why{transform:none}}
 @media(prefers-reduced-motion:reduce){.why,.why-scrim{transition:none!important}}
@@ -658,6 +667,13 @@ body{transition:background-color .3s,color .3s}
     <p>So this isn’t a list of things we’ve simply seen. It’s a list of things we carry forward. Calvino said a classic is a book that has never finished saying what it has to say, and most of us have at least one of those (book, film, exhibition, album) from this year, even if we haven’t had the chance to stop and think about it.</p>
     <p>In a year when machines can make something that looks a lot like art, the meaning is still made at our end: in choosing, feeling, and passing it on.</p>
     <p>So that’s PUBLIC Wrapped: what moved us, made us think, or is staying with us for at least another year. Have a look at what everyone else is taking with them!</p>
+    <div class="why-more">
+      <h3>Further reading</h3>
+      <ul>
+        <li><a href="https://www.hup.harvard.edu/file/feeds/PDF/9780674302457_sample.pdf" target="_blank" rel="noopener"><b>Jorge Luis Borges, <i>This Craft of Verse</i> ↗</b><span>His Norton Lectures at Harvard, 1967–68, where the apple comes from</span></a></li>
+        <li><a href="https://www.newyorker.com/culture/the-weekend-essay/why-ai-isnt-going-to-make-art" target="_blank" rel="noopener"><b>Ted Chiang, “Why A.I. Isn’t Going to Make Art” ↗</b><span>The New Yorker</span></a></li>
+      </ul>
+    </div>
   </div>
 </div>
 
@@ -1705,6 +1721,9 @@ function quote(){
   frame(1,`<p class="i-q serif i-type"><span id="iTyped"></span><span class="caret" aria-hidden="true"></span></p>
     <p class="i-by" id="iBy">— Jorge Luis Borges</p>`,`<span></span>${goBtn('Continue')}`);
   stepL.textContent='';
+  // the caret takes PUBLIC's colours in turn, one per blink
+  const caret=stage.querySelector('.caret'),hues=['#f090a6','#e9993f','#fae056','#91c7fa'];let hue=0;
+  caret.style.background=hues[0];caret.addEventListener('animationiteration',()=>{caret.style.background=hues[++hue%hues.length];});
   const out=$('iTyped'),full='“The taste of the apple lies in the contact of the fruit with the palate, not in the fruit itself.”';
   $('iGo').addEventListener('click',()=>{keys.fade(.4);box.classList.remove('bare');piece();});
   const done=()=>{keys.fade();$('iBy').classList.add('on');later(()=>reveal('iGo'),1400);};
