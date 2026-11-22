@@ -421,6 +421,10 @@ footer .made{margin:0 0 clamp(14px,2vw,22px);display:flex;justify-content:space-
 .i-type{max-width:22ch}
 .i-type #iTyped{display:inline;opacity:1;animation:none;white-space:pre-wrap}
 .i-type .caret{display:inline-block;opacity:1;animation:blink 1s steps(1) infinite}
+/* the quotation marks arrive last, once the words are down */
+.i-type .qm{display:none;opacity:1;animation:none}
+.i-type .qm.on{display:inline;animation:qin .45s ease-out both}
+@keyframes qin{from{opacity:0}to{opacity:1}}
 .caret{display:inline-block;width:.06em;height:.9em;margin-left:.04em;background:var(--sig);vertical-align:-.08em;animation:blink 1s steps(1) infinite}
 @keyframes blink{50%{opacity:0}}
 .i-by{opacity:0;transition:opacity 1.2s}
@@ -1725,23 +1729,26 @@ function welcome(){
 /* 1. the quote, typed live, mistakes and all */
 function quote(){
   box.classList.add('bare');
-  frame(1,`<p class="i-q serif i-type"><span id="iTyped"></span><span class="caret" aria-hidden="true"></span></p>
+  frame(1,`<p class="i-q serif i-type"><span class="qm" id="qL">“</span><span id="iTyped"></span><span class="qm" id="qR">”</span><span class="caret" aria-hidden="true"></span></p>
     <p class="i-by" id="iBy">— Jorge Luis Borges</p>`,`<span></span>${goBtn('Continue')}`);
   stepL.textContent='';
   // the caret takes PUBLIC's colours in turn, one per blink
   const caret=stage.querySelector('.caret'),hues=['#f090a6','#e9993f','#fae056','#91c7fa'];let hue=0;
   caret.style.background=hues[0];caret.addEventListener('animationiteration',()=>{caret.style.background=hues[++hue%hues.length];});
-  const out=$('iTyped'),full='“The taste of the apple lies in the contact of the fruit with the palate, not in the fruit itself.”';
+  const out=$('iTyped'),full='The taste of the apple lies in the contact of the fruit with the palate, not in the fruit itself.';
   $('iGo').addEventListener('click',()=>{keys.fade(.4);box.classList.remove('bare');piece();});
   const done=()=>{keys.fade();$('iBy').classList.add('on');later(()=>reveal('iGo'),1400);};
-  if(reduce){out.textContent=full;done();return;}
+  if(reduce){out.textContent=full;$('qL').classList.add('on');$('qR').classList.add('on');done();return;}
   keys.wake();keys.settle();
   // type, slip, delete one; type, slip, delete two; finish
-  const script=[['type','“The taste of the apple liee'],['del',1],['type','s in the contact of the fruit with the palaet'],['del',2],['type','te, not in the fruit itself.”']];
+  const script=[['type','The taste of the apple liee'],['del',1],['type','s in the contact of the fruit with the palaet'],['del',2],['type','te, not in the fruit itself.']];
+  // words first; then the opening mark, the closing mark, and only then the name
+  const quotes=()=>{$('qL').classList.add('on');keys.tick('key');
+    later(()=>{$('qR').classList.add('on');keys.tick('key');later(done,900);},520);};
   let k=0,buf='';
   const pace=c=>c===','||c==='…'?560:c===' '?120+Math.random()*80:85+Math.random()*95;
   (function run(){
-    const st=script[k];if(!st){later(done,700);return;}
+    const st=script[k];if(!st){later(quotes,600);return;}
     if(st[0]==='type'){
       if(!st.i)st.i=0;
       if(st.i<st[1].length){const c=st[1][st.i++];buf+=c;out.textContent=buf;keys.tick(c===' '?'space':'key');later(run,pace(c));return;}
