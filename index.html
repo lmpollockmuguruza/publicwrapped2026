@@ -1681,7 +1681,7 @@ const keys=(()=>{
     const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
     try{
       if(!c){c=new AC();out=c.createGain();out.gain.value=0;
-        const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=4200;out.connect(lp);lp.connect(c.destination);
+        const lp=c.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2200;lp.Q.value=.5;out.connect(lp);lp.connect(c.destination);
         const len=Math.floor(c.sampleRate*.03);noise=c.createBuffer(1,len,c.sampleRate);const d=noise.getChannelData(0);
         for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,4);}
       if(c.state==='suspended')c.resume();
@@ -1693,10 +1693,15 @@ const keys=(()=>{
     if(!c||c.state!=='running')return;
     const t=c.currentTime,s=c.createBufferSource(),bp=c.createBiquadFilter(),e=c.createGain();
     s.buffer=noise;s.playbackRate.value=.85+Math.random()*.3;
-    bp.type='bandpass';bp.Q.value=1.4;bp.frequency.value=kind==='del'?1300:kind==='space'?1700:2100+Math.random()*700;
-    const peak=(kind==='space'?.16:kind==='del'?.14:.11)*(.8+Math.random()*.4);
-    e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(peak,t+.002);e.gain.exponentialRampToValueAtTime(.0001,t+.045);
-    s.connect(bp);bp.connect(e);e.connect(out);s.start(t);s.stop(t+.06);
+    bp.type='bandpass';bp.Q.value=.9;bp.frequency.value=kind==='del'?650:kind==='space'?720:950+Math.random()*350;
+    const peak=(kind==='space'?.17:kind==='del'?.15:.13)*(.8+Math.random()*.4);
+    e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(peak,t+.004);e.gain.exponentialRampToValueAtTime(.0001,t+.075);
+    s.connect(bp);bp.connect(e);e.connect(out);s.start(t);s.stop(t+.09);
+    // a soft wooden body under the tick, so each key lands with a little warmth
+    const o=c.createOscillator(),og=c.createGain();o.type='sine';
+    o.frequency.setValueAtTime((kind==='space'?150:kind==='del'?165:185)+Math.random()*30,t);o.frequency.exponentialRampToValueAtTime(110,t+.06);
+    og.gain.setValueAtTime(0,t);og.gain.linearRampToValueAtTime(peak*.7,t+.005);og.gain.exponentialRampToValueAtTime(.0001,t+.08);
+    o.connect(og);og.connect(out);o.start(t);o.stop(t+.1);
   }
   return {wake,settle,fade,tick};
 })();
@@ -1732,17 +1737,17 @@ function quote(){
   // type, slip, delete one; type, slip, delete two; finish
   const script=[['type','“The taste of the apple liee'],['del',1],['type','s in the contact of the fruit with the palaet'],['del',2],['type','te, not in the fruit itself.”']];
   let k=0,buf='';
-  const pace=c=>c===','||c==='…'?380:c===' '?70+Math.random()*60:45+Math.random()*75;
+  const pace=c=>c===','||c==='…'?560:c===' '?120+Math.random()*80:85+Math.random()*95;
   (function run(){
     const st=script[k];if(!st){later(done,700);return;}
     if(st[0]==='type'){
       if(!st.i)st.i=0;
       if(st.i<st[1].length){const c=st[1][st.i++];buf+=c;out.textContent=buf;keys.tick(c===' '?'space':'key');later(run,pace(c));return;}
-      k++;later(run,k===1||k===3?320:200);return;
+      k++;later(run,k===1||k===3?440:280);return;
     }
     if(!st.n)st.n=0;
-    if(st.n<st[1]){buf=buf.slice(0,-1);out.textContent=buf;keys.tick('del');st.n++;later(run,170);return;}
-    k++;later(run,260);
+    if(st.n<st[1]){buf=buf.slice(0,-1);out.textContent=buf;keys.tick('del');st.n++;later(run,240);return;}
+    k++;later(run,360);
   })();
 }
 
